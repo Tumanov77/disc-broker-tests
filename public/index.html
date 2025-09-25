@@ -56,6 +56,36 @@
             margin: 0 auto;
         }
 
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .user-data {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+        }
+
         .tests-section {
             margin: 40px 0;
         }
@@ -150,6 +180,46 @@
             font-weight: normal;
         }
 
+        .unlock-section {
+            margin: 30px 0;
+        }
+
+        .unlock-card {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(40, 167, 69, 0.2);
+        }
+
+        .unlock-card h3 {
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .unlock-card p {
+            margin-bottom: 20px;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .unlock-btn {
+            background: white;
+            color: #28a745;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .unlock-btn:hover {
+            transform: translateY(-2px);
+        }
+
         .test-card h3 {
             color: #333;
             font-size: 1.4em;
@@ -239,6 +309,12 @@
 <body>
     <div class="container">
         <div class="header">
+            <div class="user-info" id="userInfo" style="display: none;">
+                <div class="user-data">
+                    <span id="userName"></span> (<span id="userTelegram"></span>)
+                </div>
+                <button class="logout-btn" onclick="logout()">Выйти</button>
+            </div>
             <h1>🏢 Первый шаг в команду Tumanov Group</h1>
             <div class="description">
                 Мы используем многоэтапное тестирование, чтобы в команду попадали только сильные, честные и продуктивные люди.<br>
@@ -277,7 +353,7 @@
             </div>
 
             <!-- Этап 2: Основная оценка -->
-            <div class="step-section">
+            <div class="step-section" id="stage2" style="display: none;">
                 <h3 class="step-title">✅ Этап 2. Ближе узнаём вашу личность</h3>
                 
                 <!-- Aptitude -->
@@ -290,6 +366,15 @@
                 <div class="test-card" onclick="window.location.href='/t5'">
                     <h4>Тест 5 <span class="time-info">(10–15 мин)</span></h4>
                     <a href="/t5" class="test-link">Начать тест</a>
+                </div>
+            </div>
+
+            <!-- Кнопка разблокировки Этапа 2 -->
+            <div class="unlock-section" id="unlockStage2" style="display: none;">
+                <div class="unlock-card">
+                    <h3>🎯 Этап 2 готов к открытию!</h3>
+                    <p>Вы успешно прошли Этап 1. Теперь можете перейти к более глубокому изучению вашей личности.</p>
+                    <button class="unlock-btn" onclick="unlockStage(2)">Открыть Этап 2</button>
                 </div>
             </div>
 
@@ -360,8 +445,12 @@
     </div>
 
     <script>
-        // Добавляем анимацию при загрузке страницы
+        // Проверка логина и загрузка пользовательских данных
         document.addEventListener('DOMContentLoaded', function() {
+            checkLoginStatus();
+            loadProgress();
+            
+            // Анимация появления карточек
             const cards = document.querySelectorAll('.test-card');
             cards.forEach((card, index) => {
                 card.style.opacity = '0';
@@ -373,17 +462,73 @@
                     card.style.transform = 'translateY(0)';
                 }, index * 200);
             });
-        });
 
-        // Добавляем эффект при клике на карточку
-        document.querySelectorAll('.test-card').forEach(card => {
-            card.addEventListener('click', function() {
-                this.style.transform = 'scale(0.98)';
-                setTimeout(() => {
-                    this.style.transform = 'scale(1)';
-                }, 150);
+            // Добавляем эффект при клике на карточку
+            document.querySelectorAll('.test-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                });
             });
         });
+
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const candidateData = localStorage.getItem('candidateData');
+            
+            if (isLoggedIn && candidateData) {
+                const userData = JSON.parse(candidateData);
+                document.getElementById('userName').textContent = userData.fullName;
+                document.getElementById('userTelegram').textContent = userData.telegram;
+                document.getElementById('userInfo').style.display = 'flex';
+            } else {
+                // Перенаправить на страницу входа
+                window.location.href = '/entry.html';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('candidateData');
+            localStorage.removeItem('testProgress');
+            window.location.href = '/entry.html';
+        }
+
+        function loadProgress() {
+            const progress = JSON.parse(localStorage.getItem('testProgress') || '{}');
+            
+            // Проверить завершение Этапа 1
+            if (progress.stage1Completed) {
+                document.getElementById('unlockStage2').style.display = 'block';
+            }
+            
+            // Проверить разблокировку Этапа 2
+            if (progress.stage2Unlocked) {
+                document.getElementById('stage2').style.display = 'block';
+                document.getElementById('unlockStage2').style.display = 'none';
+            }
+        }
+
+        function unlockStage(stageNumber) {
+            const progress = JSON.parse(localStorage.getItem('testProgress') || '{}');
+            progress[`stage${stageNumber}Unlocked`] = true;
+            localStorage.setItem('testProgress', JSON.stringify(progress));
+            
+            // Обновить интерфейс
+            if (stageNumber === 2) {
+                document.getElementById('stage2').style.display = 'block';
+                document.getElementById('unlockStage2').style.display = 'none';
+            }
+        }
+
+        // Функция для обновления прогресса (будет вызываться из тестов)
+        window.updateTestProgress = function(stageNumber) {
+            const progress = JSON.parse(localStorage.getItem('testProgress') || '{}');
+            progress[`stage${stageNumber}Completed`] = true;
+            localStorage.setItem('testProgress', JSON.stringify(progress));
+        };
     </script>
 </body>
 </html>
