@@ -194,8 +194,15 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>📊 Админ-панель HR</h1>
-            <p>Tumanov Group - Система тестирования кандидатов</p>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1>📊 Админ-панель HR</h1>
+                    <p>Tumanov Group - Система тестирования кандидатов</p>
+                </div>
+                <button onclick="logout()" style="background: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">
+                    🚪 Выйти
+                </button>
+            </div>
         </div>
 
         <button class="refresh-btn" onclick="loadData()">🔄 Обновить данные</button>
@@ -289,14 +296,28 @@
     <div id="update-timestamp" class="update-timestamp"></div>
 
     <script>
-        // Устанавливаем отметку времени
+        // Проверка авторизации при загрузке страницы
         document.addEventListener('DOMContentLoaded', function() {
+            // Проверяем авторизацию
+            if (sessionStorage.getItem('adminAuth') !== 'true') {
+                window.location.href = '/admin-login.html';
+                return;
+            }
+            
+            // Устанавливаем отметку времени
             const timestampElement = document.getElementById('update-timestamp');
             if (timestampElement) {
                 timestampElement.textContent = `Обновлено: 26.09.2025, 03:15:00`;
             }
             loadData();
         });
+
+        // Функция выхода
+        function logout() {
+            sessionStorage.removeItem('adminAuth');
+            sessionStorage.removeItem('adminEmail');
+            window.location.href = '/admin-login.html';
+        }
 
         // Загрузка данных
         async function loadData() {
