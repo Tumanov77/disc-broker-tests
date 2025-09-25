@@ -598,7 +598,7 @@
             <p>Система тестирования кандидатов Tumanov Group</p>
             <p style="margin-top: 10px;">
                 <a href="javascript:showAdminPanel()" style="color: #28a745; text-decoration: none; font-size: 14px; font-weight: bold;">
-                    🔧 АДМИН-ПАНЕЛЬ РАБОТАЕТ! (требует пароль)
+                    🔧 АДМИН-ПАНЕЛЬ (логин + пароль)
                 </a>
             </p>
         </div>
@@ -1132,17 +1132,63 @@
             const timestampElement = document.getElementById('update-timestamp');
             if (timestampElement) {
                 // Статичная дата последнего обновления на сервере
-                timestampElement.textContent = `✅ ОБНОВЛЕНО: 26.09.2025, 05:30:00 - ВСЁ РАБОТАЕТ! ✅`;
+                timestampElement.textContent = `✅ ОБНОВЛЕНО: 26.09.2025, 05:35:00 - АДМИНКА С ЛОГИНОМ! ✅`;
             }
         });
 
-        // Функции для встроенной админки с защитой
+        // Функции для встроенной админки с полной защитой
         function showAdminPanel() {
-            const password = prompt('🔐 Введите пароль для доступа к админ-панели:');
-            if (password === 'hakjow-zuzra5-Qovbop') {
-                document.getElementById('adminPanel').style.display = 'block';
-            } else if (password !== null) {
-                alert('❌ Неверный пароль! Доступ запрещен.');
+            // Создаем форму входа
+            const loginForm = document.createElement('div');
+            loginForm.innerHTML = `
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; display: flex; align-items: center; justify-content: center;">
+                    <div style="background: white; border-radius: 20px; padding: 40px; max-width: 400px; width: 90%; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
+                        <div style="text-align: center; margin-bottom: 30px;">
+                            <h1 style="color: #333; font-size: 2em; margin-bottom: 10px;">🔐 Вход в админку</h1>
+                            <p style="color: #666;">Tumanov Group HR</p>
+                        </div>
+                        <form id="adminLoginForm">
+                            <div style="margin-bottom: 20px;">
+                                <label style="display: block; margin-bottom: 8px; color: #333; font-weight: bold;">Email:</label>
+                                <input type="email" id="adminEmail" required style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; box-sizing: border-box;">
+                            </div>
+                            <div style="margin-bottom: 20px;">
+                                <label style="display: block; margin-bottom: 8px; color: #333; font-weight: bold;">Пароль:</label>
+                                <input type="password" id="adminPassword" required style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; box-sizing: border-box;">
+                            </div>
+                            <div id="errorMessage" style="color: #dc3545; margin-bottom: 15px; font-size: 14px; display: none;"></div>
+                            <div style="display: flex; gap: 10px;">
+                                <button type="submit" style="flex: 1; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px; border-radius: 10px; font-size: 16px; cursor: pointer;">Войти</button>
+                                <button type="button" onclick="closeLoginForm()" style="background: #6c757d; color: white; border: none; padding: 12px 20px; border-radius: 10px; font-size: 16px; cursor: pointer;">Отмена</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(loginForm);
+            
+            // Обработчик формы
+            document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = document.getElementById('adminEmail').value;
+                const password = document.getElementById('adminPassword').value;
+                const errorMessage = document.getElementById('errorMessage');
+                
+                if (email === 'tumanovnv@gmail.com' && password === 'hakjow-zuzra5-Qovbop') {
+                    closeLoginForm();
+                    document.getElementById('adminPanel').style.display = 'block';
+                } else {
+                    errorMessage.textContent = 'Неверный логин или пароль.';
+                    errorMessage.style.display = 'block';
+                }
+            });
+        }
+        
+        function closeLoginForm() {
+            const loginForm = document.querySelector('div[style*="position: fixed"]');
+            if (loginForm) {
+                loginForm.remove();
             }
         }
         
