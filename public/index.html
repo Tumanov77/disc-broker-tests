@@ -83,6 +83,67 @@
             box-shadow: 0 10px 25px rgba(102, 126, 234, 0.15);
         }
 
+        .test-card.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background: #f5f5f5;
+        }
+
+        .test-card.disabled:hover {
+            transform: none;
+            border-color: transparent;
+            box-shadow: none;
+        }
+
+        .step-section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .step-title {
+            color: #333;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .step-description {
+            color: #666;
+            font-size: 1em;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .step-status {
+            margin-bottom: 20px;
+        }
+
+        .status-coming-soon {
+            background: #ff9800;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .test-status {
+            color: #ff9800;
+            font-weight: 600;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        .test-card h4 {
+            color: #333;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
         .test-card h3 {
             color: #333;
             font-size: 1.4em;
@@ -172,50 +233,81 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🏠 Тестирование брокеров</h1>
-            <div class="subtitle">по продажам недвижимости</div>
+            <h1>🏢 Система тестирования</h1>
+            <div class="subtitle">оценки кандидатов</div>
             <div class="description">
-                Комплексная система оценки кандидатов на позицию брокера по продажам недвижимости
+                Многоэтапная система тестирования для всех должностей в компании
             </div>
         </div>
 
         <div class="tests-section">
-            <h2>📋 Доступные тесты</h2>
+            <h2>📋 Этапы тестирования</h2>
             
-            <div class="test-card" onclick="window.location.href='/disc-test.html'">
-                <h3>🧠 Тест 1</h3>
-                <div class="test-details">
-                    Время прохождения: 15-20 минут
+            <!-- Шаг 1: Общие тесты -->
+            <div class="step-section">
+                <h3 class="step-title">🎯 Шаг 1: Общие тесты (для всех должностей)</h3>
+                <div class="step-description">
+                    Обязательные тесты, которые проходят все кандидаты независимо от должности
                 </div>
-                <a href="/disc-test.html" class="test-link">Начать тест</a>
+                <div class="step-status">
+                    <span class="status-coming-soon">Скоро будет доступно</span>
+                </div>
             </div>
 
-            <div class="test-card" onclick="window.location.href='/test2.html'">
-                <h3>💭 Тест 2</h3>
-                <div class="test-details">
-                    Время прохождения: 10-15 минут
+            <!-- Шаг 2: Профильные тесты -->
+            <div class="step-section">
+                <h3 class="step-title">🎯 Шаг 2: Профильные тесты</h3>
+                <div class="step-description">
+                    Специализированные тесты в зависимости от должности
                 </div>
-                <a href="/test2.html" class="test-link">Начать тест</a>
-            </div>
+                
+                <!-- 2.1 Брокеры -->
+                <div class="test-card" onclick="window.location.href='/disc-test.html'">
+                    <h4>🏠 2.1 Профильные тесты для брокеров по продажам недвижимости</h4>
+                    <div class="test-details">
+                        Время прохождения: 35-50 минут
+                    </div>
+                    <a href="/disc-test.html" class="test-link">Начать тесты</a>
+                </div>
 
-            <div class="test-card" onclick="window.location.href='/test3.html'">
-                <h3>💪 Тест 3</h3>
-                <div class="test-details">
-                    Время прохождения: 8-12 минут
+                <!-- 2.2 Руководители -->
+                <div class="test-card disabled">
+                    <h4>👔 2.2 Профильные тесты для руководителей</h4>
+                    <div class="test-details">
+                        Время прохождения: 30-45 минут
+                    </div>
+                    <div class="test-status">Скоро будет доступно</div>
                 </div>
-                <a href="/test3.html" class="test-link">Начать тест</a>
+
+                <!-- 2.3 Бэкофис -->
+                <div class="test-card disabled">
+                    <h4>💼 2.3 Профильные тесты для сотрудников бэкофиса</h4>
+                    <div class="test-details">
+                        Время прохождения: 25-40 минут
+                    </div>
+                    <div class="test-status">Скоро будет доступно</div>
+                </div>
+
+                <!-- 2.4 Маркетинг -->
+                <div class="test-card disabled">
+                    <h4>📢 2.4 Профильные тесты для отдела маркетинга</h4>
+                    <div class="test-details">
+                        Время прохождения: 30-45 минут
+                    </div>
+                    <div class="test-status">Скоро будет доступно</div>
+                </div>
             </div>
         </div>
 
         <div class="info-section">
             <h3>ℹ️ Информация о тестировании</h3>
-            <p><span class="highlight">Время прохождения:</span> Все тесты занимают 35-50 минут</p>
+            <p><span class="highlight">Процесс:</span> Сначала общие тесты, затем профильные для вашей должности</p>
             <p><span class="highlight">Результаты:</span> Автоматически отправляются в HR отдел</p>
             <p><span class="highlight">Обратная связь:</span> HR @LyubovTarasova11 свяжется с вами после прохождения</p>
         </div>
 
         <div class="footer">
-            <p>Система тестирования для оценки кандидатов на позицию брокера по продажам недвижимости</p>
+            <p>Многоэтапная система тестирования для оценки кандидатов на все должности в компании</p>
         </div>
     </div>
 
