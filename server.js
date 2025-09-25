@@ -332,4 +332,5 @@ app.listen(PORT, () => {
     console.log(`🚀 DISC Bot server running on port ${PORT}`);
     console.log(`📱 Telegram Bot Token: ${process.env.TELEGRAM_BOT_TOKEN ? '✅ Set' : '❌ Missing'}`);
     console.log(`📺 Channel ID: ${process.env.TELEGRAM_CHANNEL_ID ? '✅ Set' : '❌ Missing'}`);
+    console.log(`🌐 Main page: index.html with test overview`);
 });
