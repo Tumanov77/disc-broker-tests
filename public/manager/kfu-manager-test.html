@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>КФУ - Руководитель отдела продаж</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .user-data {
+            color: white;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 600;
+        }
+
+        .header .subtitle {
+            margin: 15px 0 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .test-description {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            color: #856404;
+        }
+
+        .test-description h3 {
+            margin-top: 0;
+            color: #d68910;
+        }
+
+        .question-block {
+            margin-bottom: 35px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .question-block h4 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 1.2em;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .option.selected {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+        }
+
+        .option label {
+            cursor: pointer;
+            flex: 1;
+            margin: 0;
+        }
+
+        .submit-section {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e9ecef;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+        }
+
+        .submit-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #e0f7fa;
+            color: #00796b;
+            border-radius: 8px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .error-message {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #ffebee;
+            color: #c62828;
+            border-radius: 8px;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #e8f5e8;
+            color: #2e7d32;
+            border-radius: 8px;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="user-info" id="userInfo" style="display: none;">
+                <div class="user-data">
+                    <span id="userName"></span> (<span id="userTelegram"></span>)
+                </div>
+                <button class="logout-btn" onclick="logout()">Выйти</button>
+            </div>
+            <h1>Критические факторы успеха</h1>
+            <div class="subtitle">Руководитель отдела продаж</div>
+        </div>
+
+        <div class="content">
+            <div class="test-description">
+                <h3>⚠️ Важно!</h3>
+                <p>Этот этап определяет соответствие базовым требованиям для должности руководителя отдела продаж. 
+                Без соответствия этим критериям дальнейшее тестирование не имеет смысла.</p>
+            </div>
+
+            <form id="kfuForm">
+                <div class="question-block">
+                    <h4>Какой у вас опыт работы в недвижимости?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q1_a" name="question1" value="a" required>
+                            <label for="q1_a">Более 2 лет в агентстве недвижимости, включая управление продажами</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q1_b" name="question1" value="b">
+                            <label for="q1_b">2–3 года работы в смежных продажах, но не в недвижимости</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q1_c" name="question1" value="c">
+                            <label for="q1_c">5+ лет в B2B продажах, без недвижимости</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q1_d" name="question1" value="d">
+                            <label for="q1_d">Никогда не работал в недвижимости</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-block">
+                    <h4>Сколько человек в среднем было в вашей команде продаж под управлением?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q2_a" name="question2" value="a" required>
+                            <label for="q2_a">1–3</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q2_b" name="question2" value="b">
+                            <label for="q2_b">5–15</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q2_c" name="question2" value="c">
+                            <label for="q2_c">20+</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q2_d" name="question2" value="d">
+                            <label for="q2_d">Никогда не руководил отделом</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-block">
+                    <h4>Сколько лет вы управляли отделом продаж?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q3_a" name="question3" value="a" required>
+                            <label for="q3_a">Менее года</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q3_b" name="question3" value="b">
+                            <label for="q3_b">1–2 года</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q3_c" name="question3" value="c">
+                            <label for="q3_c">Более 2 лет</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q3_d" name="question3" value="d">
+                            <label for="q3_d">Не управлял отделом</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-block">
+                    <h4>Какую основную метрику вы считаете ключевой для управления отделом продаж недвижимости?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q4_a" name="question4" value="a" required>
+                            <label for="q4_a">Количество исходящих звонков</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q4_b" name="question4" value="b">
+                            <label for="q4_b">Конверсия по воронке (лид → сделка)</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q4_c" name="question4" value="c">
+                            <label for="q4_c">Средний чек сделки</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q4_d" name="question4" value="d">
+                            <label for="q4_d">Количество встреч в неделю</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-block">
+                    <h4>Какая из задач для руководителя отдела продаж первоочередная?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q5_a" name="question5" value="a" required>
+                            <label for="q5_a">Лично закрывать больше сделок</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q5_b" name="question5" value="b">
+                            <label for="q5_b">Мотивировать и развивать брокеров, ускорять движение клиентов по воронке</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q5_c" name="question5" value="c">
+                            <label for="q5_c">Вести переговоры с застройщиками</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q5_d" name="question5" value="d">
+                            <label for="q5_d">Контролировать бухгалтерию</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-block">
+                    <h4>Как вы обычно работаете со слабыми брокерами?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q6_a" name="question6" value="a" required>
+                            <label for="q6_a">Увольняю сразу</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q6_b" name="question6" value="b">
+                            <label for="q6_b">Даю обучение, контроль и только потом принимаю решение</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q6_c" name="question6" value="c">
+                            <label for="q6_c">Перевожу на менее ответственные задачи</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q6_d" name="question6" value="d">
+                            <label for="q6_d">Оставляю без внимания</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-block">
+                    <h4>Какой опыт наиболее релевантен для данной роли?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q7_a" name="question7" value="a" required>
+                            <label for="q7_a">Управление продажами в банке</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q7_b" name="question7" value="b">
+                            <label for="q7_b">Управление отделом недвижимости (инвестиции, премиум-сегмент)</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q7_c" name="question7" value="c">
+                            <label for="q7_c">Продажа автомобилей</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q7_d" name="question7" value="d">
+                            <label for="q7_d">Руководство в ритейле</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="submit-section">
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        Завершить проверку КФУ
+                    </button>
+                </div>
+            </form>
+
+            <div id="loading" class="loading">
+                <p>Пожалуйста, подождите, мы обрабатываем ваши ответы</p>
+            </div>
+
+            <div id="successMessage" class="success-message">
+                <h3>✅ КФУ пройдены успешно!</h3>
+                <p>Вы соответствуете базовым требованиям для должности. Теперь можете перейти к основному тестированию.</p>
+            </div>
+
+            <div id="rejectionMessage" class="error-message">
+                <h3>❌ КФУ не пройдены</h3>
+                <p>К сожалению, вы не соответствуете базовым требованиям для данной должности. 
+                Тестирование завершается.</p>
+            </div>
+
+            <div id="errorMessage" class="error-message">
+                <h3>❌ Ошибка при отправке</h3>
+                <p>Попробуйте еще раз или свяжитесь с нами напрямую</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Проверка логина при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginStatus();
+            
+            // Добавить обработчики для выбора опций
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const radio = this.querySelector('input[type="radio"]');
+                    if (radio) {
+                        radio.checked = true;
+                        updateOptionStyles();
+                    }
+                });
+            });
+        });
+
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const candidateData = localStorage.getItem('candidateData');
+            
+            if (isLoggedIn && candidateData) {
+                const userData = JSON.parse(candidateData);
+                // Убираем отчество из имени
+                const nameParts = userData.fullName.split(' ');
+                const displayName = nameParts.length > 1 ? `${nameParts[0]} ${nameParts[1]}` : userData.fullName;
+                
+                document.getElementById('userName').textContent = displayName;
+                document.getElementById('userTelegram').textContent = userData.telegram;
+                document.getElementById('userInfo').style.display = 'flex';
+            } else {
+                // Перенаправить на страницу входа
+                window.location.href = '/entry.html';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('candidateData');
+            localStorage.removeItem('testProgress');
+            window.location.href = '/entry.html';
+        }
+
+        function updateOptionStyles() {
+            document.querySelectorAll('.option').forEach(option => {
+                const radio = option.querySelector('input[type="radio"]');
+                if (radio && radio.checked) {
+                    option.classList.add('selected');
+                } else {
+                    option.classList.remove('selected');
+                }
+            });
+        }
+
+        // Обработка отправки формы
+        document.getElementById('kfuForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const candidateData = JSON.parse(localStorage.getItem('candidateData'));
+            
+            // Собрать ответы
+            const answers = {
+                question1: formData.get('question1'),
+                question2: formData.get('question2'),
+                question3: formData.get('question3'),
+                question4: formData.get('question4'),
+                question5: formData.get('question5'),
+                question6: formData.get('question6'),
+                question7: formData.get('question7')
+            };
+            
+            // Проверить КФУ (правильные ответы)
+            const correctAnswers = {
+                question1: 'a', // Опыт в недвижимости
+                question2: ['b', 'c'], // 5-15 или 20+ человек
+                question3: 'c', // Более 2 лет управления
+                question4: 'b', // Конверсия по воронке
+                question5: 'b', // Мотивация и развитие команды
+                question6: 'b', // Обучение и контроль
+                question7: 'b'  // Опыт в недвижимости премиум/инвест
+            };
+            
+            let passed = 0;
+            let total = 0;
+            
+            // Проверить каждый вопрос
+            Object.keys(correctAnswers).forEach(question => {
+                total++;
+                const userAnswer = answers[question];
+                const correctAnswer = correctAnswers[question];
+                
+                if (Array.isArray(correctAnswer)) {
+                    // Для вопросов с несколькими правильными ответами
+                    if (correctAnswer.includes(userAnswer)) {
+                        passed++;
+                    }
+                } else {
+                    // Для вопросов с одним правильным ответом
+                    if (userAnswer === correctAnswer) {
+                        passed++;
+                    }
+                }
+            });
+            
+            // Определить результат (нужно пройти минимум 5 из 7 вопросов)
+            const kfuPassed = passed >= 5;
+            
+            // Показать загрузку
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('submitBtn').disabled = true;
+            
+            try {
+                // Отправить результаты на сервер
+                const response = await fetch('/submit-kfu', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        candidateData: candidateData,
+                        answers: answers,
+                        passed: kfuPassed,
+                        score: `${passed}/${total}`
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Обновить прогресс
+                    const progress = JSON.parse(localStorage.getItem('testProgress') || '{}');
+                    progress.kfuCompleted = true;
+                    progress.kfuPassed = kfuPassed;
+                    localStorage.setItem('testProgress', JSON.stringify(progress));
+                    
+                    document.getElementById('loading').classList.remove('show');
+                    
+                    if (kfuPassed) {
+                        document.getElementById('successMessage').classList.add('show');
+                        // Перенаправить на главную через 3 секунды
+                        setTimeout(() => {
+                            window.location.href = '/';
+                        }, 3000);
+                    } else {
+                        document.getElementById('rejectionMessage').classList.add('show');
+                        // Перенаправить на страницу входа через 5 секунд
+                        setTimeout(() => {
+                            logout();
+                        }, 5000);
+                    }
+                } else {
+                    throw new Error(result.error || 'Ошибка сервера');
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('loading').classList.remove('show');
+                document.getElementById('errorMessage').classList.add('show');
+                document.getElementById('submitBtn').disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

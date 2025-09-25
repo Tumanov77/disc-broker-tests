@@ -842,6 +842,55 @@ app.post('/api/submit-aptitude', async (req, res) => {
     }
 });
 
+// KFU test submission endpoint
+app.post('/submit-kfu', async (req, res) => {
+    try {
+        const { candidateData, answers, passed, score } = req.body;
+
+        // Validate data
+        if (!candidateData || !answers || passed === undefined) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+
+        // Prepare candidate data
+        const kfuData = {
+            name: candidateData.fullName,
+            telegram: candidateData.telegram,
+            position: candidateData.role,
+            answers,
+            passed,
+            score,
+            timestamp: new Date().toISOString()
+        };
+
+        // Send to Telegram channel
+        const message = formatKFUTelegramMessage(kfuData);
+
+        try {
+            await bot.sendMessage(CHANNEL_ID, message, {
+                parse_mode: 'Markdown',
+                disable_web_page_preview: true
+            });
+        } catch (telegramError) {
+            console.error('Telegram error:', telegramError);
+            // Continue even if Telegram fails
+        }
+
+        // Log to console for debugging
+        console.log('KFU test submitted:', kfuData);
+
+        res.json({
+            success: true,
+            message: 'Результаты отправлены в Telegram канал',
+            passed: passed
+        });
+
+    } catch (error) {
+        console.error('Error processing KFU test:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
     res.json({ status: 'OK', timestamp: new Date().toISOString() });
@@ -879,6 +928,11 @@ app.get('/t6', (req, res) => {
 
 app.get('/b1', (req, res) => {
     res.sendFile(__dirname + '/public/broker/spq-test.html');
+});
+
+// KFU test for managers
+app.get('/kfu', (req, res) => {
+    res.sendFile(__dirname + '/public/manager/kfu-manager-test.html');
 });
 
 // Legacy routes for backward compatibility
@@ -922,6 +976,34 @@ app.get('/test2', (req, res) => {
 app.get('/test3', (req, res) => {
     res.redirect('/broker/spq-test.html');
 });
+
+// Function to format KFU test results for Telegram
+function formatKFUTelegramMessage(data) {
+    const status = data.passed ? '🟢 ПРОЙДЕНЫ' : '🔴 НЕ ПРОЙДЕНЫ';
+    const result = data.passed ? '✅ Кандидат соответствует базовым требованиям' : '❌ Кандидат НЕ соответствует базовым требованиям';
+    
+    return `🎯 **КФУ → Критические факторы успеха**
+
+👤 **Кандидат:** ${data.name}
+📱 **Telegram:** ${data.telegram}
+💼 **Должность:** ${data.position}
+
+📊 **Результаты:**
+• **Статус:** ${status}
+• **Баллы:** ${data.score}
+• **Итог:** ${result}
+
+📝 **Ответы:**
+1. Опыт в недвижимости: ${data.answers.question1}
+2. Размер команды: ${data.answers.question2}
+3. Опыт управления: ${data.answers.question3}
+4. Ключевая метрика: ${data.answers.question4}
+5. Приоритетная задача: ${data.answers.question5}
+6. Работа со слабыми: ${data.answers.question6}
+7. Релевантный опыт: ${data.answers.question7}
+
+⏰ **Время:** ${new Date(data.timestamp).toLocaleString('ru-RU')}`;
+}
 
 app.listen(PORT, () => {
     console.log(`🚀 DISC Bot server running on port ${PORT}`);

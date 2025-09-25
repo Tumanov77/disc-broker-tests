@@ -549,9 +549,19 @@
         function checkLoginStatus() {
             const isLoggedIn = localStorage.getItem('isLoggedIn');
             const candidateData = localStorage.getItem('candidateData');
+            const progress = JSON.parse(localStorage.getItem('testProgress') || '{}');
             
             if (isLoggedIn && candidateData) {
                 const userData = JSON.parse(candidateData);
+                
+                // Проверить, не был ли кандидат отсеян по КФУ
+                if (userData.role === 'manager' && progress.kfuCompleted && !progress.kfuPassed) {
+                    // Показать сообщение об отсеивании и перенаправить
+                    alert('Вы не прошли проверку критических факторов успеха для данной должности. Тестирование завершается.');
+                    logout();
+                    return;
+                }
+                
                 // Убираем отчество из имени
                 const nameParts = userData.fullName.split(' ');
                 const displayName = nameParts.length > 1 ? `${nameParts[0]} ${nameParts[1]}` : userData.fullName;
@@ -581,12 +591,9 @@
                 `;
             } else if (role === 'manager') {
                 roleTestsContainer.innerHTML = `
-                    <div class="test-card disabled">
-                        <h4>👔 Тесты для руководителей</h4>
-                        <div class="test-details">
-                            Время прохождения: 30-45 минут
-                        </div>
-                        <div class="test-status">Скоро будет доступно</div>
+                    <div class="test-card" onclick="window.location.href='/kfu'">
+                        <h4>👔 КФУ - Критические факторы успеха <span class="time-info">(5-7 мин)</span></h4>
+                        <a href="/kfu" class="test-link">Начать проверку КФУ</a>
                     </div>
                 `;
             } else if (role === 'backoffice') {
@@ -662,7 +669,7 @@
                 const candidateData = JSON.parse(localStorage.getItem('candidateData') || '{}');
                 const role = candidateData.role;
                 
-                if (role === 'broker') {
+                if (role === 'broker' || role === 'manager') {
                     document.getElementById('unlockRoleTests').style.display = 'block';
                 } else {
                     // Для ролей без тестов сразу показать финальный этап
@@ -684,7 +691,7 @@
             if (role === 'broker') {
                 roleTests = ['test7']; // SPQ для брокеров
             } else if (role === 'manager') {
-                roleTests = []; // Пока нет тестов для руководителей
+                roleTests = ['kfu']; // КФУ для руководителей
             } else if (role === 'backoffice') {
                 roleTests = []; // Пока нет тестов для бэкофиса
             } else if (role === 'marketing') {
@@ -847,9 +854,10 @@
                 }
             });
             
-            // Профильные тесты (только для брокеров)
+            // Профильные тесты
             const roleTests = [
-                { test: 'test7', element: document.querySelector('[onclick*="/b1"]') }
+                { test: 'test7', element: document.querySelector('[onclick*="/b1"]') }, // SPQ для брокеров
+                { test: 'kfu', element: document.querySelector('[onclick*="/kfu"]') } // КФУ для руководителей
             ];
             
             roleTests.forEach(({ test, element }) => {
