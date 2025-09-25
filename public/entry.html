@@ -443,21 +443,21 @@
                 </div>
                 
                 <!-- DISC -->
-                <div class="test-card" onclick="checkAuthAndGo('/t1')">
+                <div class="test-card" onclick="window.location.href='/t1'">
                     <h4>Тест 1 <span class="time-info">(5 мин)</span></h4>
-                    <a href="javascript:void(0)" class="test-link" onclick="checkAuthAndGo('/t1')">Начать тест</a>
+                    <a href="javascript:void(0)" class="test-link" onclick="window.location.href='/t1'">Начать тест</a>
                 </div>
 
                 <!-- Hubbard -->
-                <div class="test-card" onclick="checkAuthAndGo('/t2')">
+                <div class="test-card" onclick="window.location.href='/t2'">
                     <h4>Тест 2 <span class="time-info">(5 мин)</span></h4>
-                    <a href="javascript:void(0)" class="test-link" onclick="checkAuthAndGo('/t2')">Начать тест</a>
+                    <a href="javascript:void(0)" class="test-link" onclick="window.location.href='/t2'">Начать тест</a>
                 </div>
 
                 <!-- EQ -->
-                <div class="test-card" onclick="checkAuthAndGo('/t3')">
+                <div class="test-card" onclick="window.location.href='/t3'">
                     <h4>Тест 3 <span class="time-info">(10–15 мин)</span></h4>
-                    <a href="javascript:void(0)" class="test-link" onclick="checkAuthAndGo('/t3')">Начать тест</a>
+                    <a href="javascript:void(0)" class="test-link" onclick="window.location.href='/t3'">Начать тест</a>
                 </div>
                 
             </div>
@@ -804,7 +804,7 @@
             }
             
             console.log('User not logged in or invalid data, redirecting to login');
-            // Очищаем поврежденные данные
+            
             window.location.href = '/';
         }
 
@@ -1062,7 +1062,7 @@
             const timestampElement = document.getElementById('update-timestamp');
             if (timestampElement) {
                 // Статичная дата последнего обновления на сервере
-                timestampElement.textContent = `Последнее обновление: 26.09.2025, 04:37:37`;
+                timestampElement.textContent = `Последнее обновление: 26.09.2025, 04:39:37`;
             }
         });
     </script>
