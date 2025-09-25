@@ -380,44 +380,9 @@
 
 
             <!-- Шаг 2: Профильные тесты -->
-            <div class="step-section">
+            <div class="step-section" id="roleSpecificTests" style="display: none;">
                 <h3 class="step-title">🎯 Проверка по роли</h3>
-                
-                <!-- 2.1 Брокеры -->
-                <div class="test-card" onclick="window.location.href='/b1'">
-                    <h4>🏠 Для брокеров</h4>
-                    <div class="test-details">
-                        Тест 7 - настойчивость в продажах (8-12 минут)
-                    </div>
-                    <a href="/b1" class="test-link">Начать тест</a>
-                </div>
-
-                <!-- 2.2 Руководители -->
-                <div class="test-card disabled">
-                    <h4>👔 Для руководителей</h4>
-                    <div class="test-details">
-                        Время прохождения: 30-45 минут
-                    </div>
-                    <div class="test-status">Скоро будет доступно</div>
-                </div>
-
-                <!-- 2.3 Бэкофис -->
-                <div class="test-card disabled">
-                    <h4>💼 Для бэкофиса</h4>
-                    <div class="test-details">
-                        Время прохождения: 25-40 минут
-                    </div>
-                    <div class="test-status">Скоро будет доступно</div>
-                </div>
-
-                <!-- 2.4 Маркетинг -->
-                <div class="test-card disabled">
-                    <h4>📢 Для маркетинга</h4>
-                    <div class="test-details">
-                        Время прохождения: 30-45 минут
-                    </div>
-                    <div class="test-status">Скоро будет доступно</div>
-                </div>
+                <div id="roleTestsContainer"></div>
             </div>
 
             <!-- Финальный этап: OCA -->
@@ -483,9 +448,71 @@
                 document.getElementById('userName').textContent = userData.fullName;
                 document.getElementById('userTelegram').textContent = userData.telegram;
                 document.getElementById('userInfo').style.display = 'flex';
+                
+                // Показать тесты для выбранной роли
+                showRoleSpecificTests(userData.role);
             } else {
                 // Перенаправить на страницу входа
                 window.location.href = '/entry.html';
+            }
+        }
+
+        function showRoleSpecificTests(role) {
+            const roleTestsContainer = document.getElementById('roleTestsContainer');
+            const roleSpecificTests = document.getElementById('roleSpecificTests');
+            
+            if (role === 'broker') {
+                roleTestsContainer.innerHTML = `
+                    <div class="test-card" onclick="window.location.href='/b1'">
+                        <h4>🏠 Тест 7 - настойчивость в продажах <span class="time-info">(8-12 мин)</span></h4>
+                        <a href="/b1" class="test-link">Начать тест</a>
+                    </div>
+                `;
+                roleSpecificTests.style.display = 'block';
+            } else if (role === 'manager') {
+                roleTestsContainer.innerHTML = `
+                    <div class="test-card disabled">
+                        <h4>👔 Тесты для руководителей</h4>
+                        <div class="test-details">
+                            Время прохождения: 30-45 минут
+                        </div>
+                        <div class="test-status">Скоро будет доступно</div>
+                    </div>
+                `;
+                roleSpecificTests.style.display = 'block';
+            } else if (role === 'backoffice') {
+                roleTestsContainer.innerHTML = `
+                    <div class="test-card disabled">
+                        <h4>💼 Тесты для бэкофиса</h4>
+                        <div class="test-details">
+                            Время прохождения: 25-40 минут
+                        </div>
+                        <div class="test-status">Скоро будет доступно</div>
+                    </div>
+                `;
+                roleSpecificTests.style.display = 'block';
+            } else if (role === 'marketing') {
+                roleTestsContainer.innerHTML = `
+                    <div class="test-card disabled">
+                        <h4>📢 Тесты для маркетинга</h4>
+                        <div class="test-details">
+                            Время прохождения: 30-45 минут
+                        </div>
+                        <div class="test-status">Скоро будет доступно</div>
+                    </div>
+                `;
+                roleSpecificTests.style.display = 'block';
+            } else if (role === 'other') {
+                roleTestsContainer.innerHTML = `
+                    <div class="test-card disabled">
+                        <h4>🔧 Тесты для других должностей</h4>
+                        <div class="test-details">
+                            Время прохождения: 20-35 минут
+                        </div>
+                        <div class="test-status">Скоро будет доступно</div>
+                    </div>
+                `;
+                roleSpecificTests.style.display = 'block';
             }
         }
 
@@ -498,10 +525,16 @@
 
         function loadProgress() {
             const progress = JSON.parse(localStorage.getItem('testProgress') || '{}');
+            const candidateData = JSON.parse(localStorage.getItem('candidateData') || '{}');
             
-            // Проверить завершение Этапа 1
-            if (progress.stage1Completed) {
+            // Проверить завершение Этапа 1 (все тесты Этапа 1 должны быть пройдены)
+            const stage1Tests = ['test1', 'test2', 'test3']; // DISC, Hubbard, EQ
+            const completedStage1Tests = stage1Tests.filter(test => progress[test + 'Completed']);
+            
+            if (completedStage1Tests.length === stage1Tests.length) {
                 document.getElementById('unlockStage2').style.display = 'block';
+                progress.stage1Completed = true;
+                localStorage.setItem('testProgress', JSON.stringify(progress));
             }
             
             // Проверить разблокировку Этапа 2

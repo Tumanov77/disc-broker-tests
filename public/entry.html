@@ -77,6 +77,22 @@
             color: #aaa;
         }
 
+        .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1em;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
         .submit-btn {
             width: 100%;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -151,10 +167,6 @@
             <div class="subtitle">Первый шаг в команду Tumanov Group</div>
         </div>
 
-        <div class="info">
-            <h3>📋 Информация</h3>
-            <p>Для начала тестирования нам нужны ваши контактные данные. После регистрации вы сможете проходить тесты поэтапно.</p>
-        </div>
 
         <form id="entryForm">
             <div class="form-group">
@@ -165,6 +177,18 @@
             <div class="form-group">
                 <label for="telegram">Telegram ник *</label>
                 <input type="text" id="telegram" name="telegram" placeholder="@username или username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="role">Должность, на которую претендуете *</label>
+                <select id="role" name="role" required>
+                    <option value="">Выберите должность</option>
+                    <option value="broker">🏠 Брокер по продажам недвижимости</option>
+                    <option value="manager">👔 Руководитель отдела</option>
+                    <option value="backoffice">💼 Сотрудник бэкофиса</option>
+                    <option value="marketing">📢 Сотрудник отдела маркетинга</option>
+                    <option value="other">🔧 Другая должность</option>
+                </select>
             </div>
 
             <button type="submit" class="submit-btn" id="submitBtn">
@@ -199,7 +223,8 @@
             const formData = new FormData(this);
             const userData = {
                 fullName: formData.get('fullName'),
-                telegram: formData.get('telegram')
+                telegram: formData.get('telegram'),
+                role: formData.get('role')
             };
             
             try {
