@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тестирование брокеров по продажам недвижимости</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header .subtitle {
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .header .description {
+            color: #888;
+            font-size: 1em;
+            line-height: 1.6;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .tests-section {
+            margin: 40px 0;
+        }
+
+        .tests-section h2 {
+            color: #333;
+            font-size: 1.8em;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .test-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .test-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.15);
+        }
+
+        .test-card h3 {
+            color: #333;
+            font-size: 1.4em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .test-card .test-description {
+            color: #666;
+            font-size: 1em;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .test-card .test-details {
+            color: #888;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+
+        .test-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9em;
+        }
+
+        .test-link:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .info-section {
+            background: #e3f2fd;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            border-left: 4px solid #2196f3;
+        }
+
+        .info-section h3 {
+            color: #1976d2;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .info-section p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .info-section .highlight {
+            color: #1976d2;
+            font-weight: 600;
+        }
+
+        .footer {
+            margin-top: 30px;
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .header .subtitle {
+                font-size: 1.1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏠 Тестирование брокеров</h1>
+            <div class="subtitle">по продажам недвижимости</div>
+            <div class="description">
+                Комплексная система оценки кандидатов на позицию брокера по продажам недвижимости
+            </div>
+        </div>
+
+        <div class="tests-section">
+            <h2>📋 Доступные тесты</h2>
+            
+            <div class="test-card" onclick="window.location.href='/disc-test.html'">
+                <h3>🧠 Тест 1 - Стиль общения</h3>
+                <div class="test-description">
+                    Оценка поведенческого профиля и стиля взаимодействия с клиентами
+                </div>
+                <div class="test-details">
+                    • 24 блока вопросов<br>
+                    • Время прохождения: 15-20 минут<br>
+                    • Анализ профиля DISC
+                </div>
+                <a href="/disc-test.html" class="test-link">Начать тест</a>
+            </div>
+
+            <div class="test-card" onclick="window.location.href='/test2.html'">
+                <h3>💭 Тест 2 - Эмоциональный интеллект</h3>
+                <div class="test-description">
+                    Оценка способности понимать и чувствовать клиентов
+                </div>
+                <div class="test-details">
+                    • 20 ситуационных вопросов<br>
+                    • Время прохождения: 10-15 минут<br>
+                    • Анализ EQ (эмоционального интеллекта)
+                </div>
+                <a href="/test2.html" class="test-link">Начать тест</a>
+            </div>
+
+            <div class="test-card" onclick="window.location.href='/test3.html'">
+                <h3>💪 Тест 3 - Настойчивость в продажах</h3>
+                <div class="test-description">
+                    Оценка настойчивости и мотивации в продажах недвижимости
+                </div>
+                <div class="test-details">
+                    • 15 вопросов о поведении<br>
+                    • Время прохождения: 8-12 минут<br>
+                    • Анализ SPQ (настойчивости в продажах)
+                </div>
+                <a href="/test3.html" class="test-link">Начать тест</a>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h3>ℹ️ Информация о тестировании</h3>
+            <p><span class="highlight">Время прохождения:</span> Все тесты занимают 35-50 минут</p>
+            <p><span class="highlight">Результаты:</span> Автоматически отправляются в HR отдел</p>
+            <p><span class="highlight">Обратная связь:</span> HR @LyubovTarasova11 свяжется с вами после прохождения</p>
+            <p><span class="highlight">Рекомендация:</span> Пройдите все тесты последовательно для полной оценки</p>
+        </div>
+
+        <div class="footer">
+            <p>Система тестирования для оценки кандидатов на позицию брокера по продажам недвижимости</p>
+        </div>
+    </div>
+
+    <script>
+        // Добавляем анимацию при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.test-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+
+        // Добавляем эффект при клике на карточку
+        document.querySelectorAll('.test-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 150);
+            });
+        });
+    </script>
+</body>
+</html>

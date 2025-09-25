@@ -308,8 +308,13 @@ app.get('/health', (req, res) => {
     res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
-// Serve the DISC test form
+// Serve the main page with test overview
 app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/public/index.html');
+});
+
+// Serve the DISC test form
+app.get('/disc-test.html', (req, res) => {
     res.sendFile(__dirname + '/public/disc-test.html');
 });
 
