@@ -921,12 +921,17 @@ app.post('/submit-kfu', async (req, res) => {
 // Health check endpoint
 app.get('/health', (req, res) => {
     console.log('Health check requested');
-    res.json({ 
-        status: 'OK', 
-        timestamp: new Date().toISOString(),
-        port: PORT,
-        database: 'SQLite connected'
-    });
+    try {
+        res.json({ 
+            status: 'OK', 
+            timestamp: new Date().toISOString(),
+            port: PORT,
+            uptime: process.uptime()
+        });
+    } catch (error) {
+        console.error('Health check error:', error);
+        res.status(500).json({ status: 'ERROR', error: error.message });
+    }
 });
 
 // Serve the main page with test overview
@@ -1158,12 +1163,18 @@ process.on('unhandledRejection', (reason, promise) => {
     console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });
 
+console.log('Starting server...');
+console.log('PORT:', PORT);
+console.log('Environment variables loaded');
+
 app.listen(PORT, () => {
     console.log(`🚀 DISC Bot server running on port ${PORT}`);
     console.log(`📱 Telegram Bot Token: ${process.env.TELEGRAM_BOT_TOKEN ? '✅ Set' : '❌ Missing'}`);
     console.log(`📺 Channel ID: ${process.env.TELEGRAM_CHANNEL_ID ? '✅ Set' : '❌ Missing'}`);
     console.log(`🌐 Main page: index.html with test overview`);
     console.log(`🗄️ Database: SQLite connected`);
+    console.log('Server started successfully!');
 }).on('error', (error) => {
     console.error('Server error:', error);
+    process.exit(1);
 });
