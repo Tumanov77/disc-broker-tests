@@ -537,6 +537,32 @@
     <script>
         // Проверка логина и загрузка пользовательских данных
         document.addEventListener('DOMContentLoaded', function() {
+            // Сначала проверим и очистим поврежденные данные
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const candidateData = localStorage.getItem('candidateData');
+            
+            console.log('Page loaded, checking data:');
+            console.log('isLoggedIn:', isLoggedIn);
+            console.log('candidateData:', candidateData);
+            
+            // Если есть флаг входа, но нет данных пользователя - очищаем всё
+            if (isLoggedIn === 'true' && (!candidateData || candidateData.trim() === '')) {
+                console.log('Found isLoggedIn=true but no candidateData, clearing all data');
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = '/entry.html';
+                return;
+            }
+            
+            // Если нет флага входа, но есть данные - тоже очищаем
+            if (isLoggedIn !== 'true' && candidateData) {
+                console.log('Found candidateData but no isLoggedIn flag, clearing all data');
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = '/entry.html';
+                return;
+            }
+            
             checkLoginStatus();
             loadProgress();
             
@@ -577,15 +603,17 @@
             console.log('isLoggedIn:', isLoggedIn);
             console.log('candidateData:', candidateData);
             
-            // Проверяем валидность данных
-            if (isLoggedIn === 'true' && candidateData) {
+            // Более строгая проверка валидности данных
+            if (isLoggedIn === 'true' && candidateData && candidateData.trim() !== '') {
                 try {
                     const userData = JSON.parse(candidateData);
                     
-                    // Проверяем, что данные полные
-                    if (!userData.fullName || !userData.telegram || !userData.role) {
-                        console.log('Incomplete user data, clearing and redirecting');
+                    // Проверяем, что данные полные и корректные
+                    if (!userData.fullName || !userData.telegram || !userData.role || 
+                        userData.fullName.trim() === '' || userData.telegram.trim() === '' || userData.role.trim() === '') {
+                        console.log('Incomplete or empty user data, clearing and redirecting');
                         localStorage.clear();
+                        sessionStorage.clear();
                         window.location.href = '/entry.html';
                         return;
                     }
@@ -602,9 +630,20 @@
                     const nameParts = userData.fullName.split(' ');
                     const displayName = nameParts.length > 1 ? `${nameParts[0]} ${nameParts[1]}` : userData.fullName;
                     
-                    document.getElementById('userName').textContent = displayName;
-                    document.getElementById('userTelegram').textContent = userData.telegram;
-                    document.getElementById('userInfo').style.display = 'flex';
+                    // Убеждаемся, что элементы существуют
+                    const userNameElement = document.getElementById('userName');
+                    const userTelegramElement = document.getElementById('userTelegram');
+                    const userInfoElement = document.getElementById('userInfo');
+                    
+                    if (userNameElement && userTelegramElement && userInfoElement) {
+                        userNameElement.textContent = displayName;
+                        userTelegramElement.textContent = userData.telegram;
+                        userInfoElement.style.display = 'flex';
+                        
+                        console.log('User info displayed:', displayName, userData.telegram);
+                    } else {
+                        console.error('User info elements not found');
+                    }
                     
                     // Показать тесты для выбранной роли
                     showRoleSpecificTests(userData.role);
@@ -614,11 +653,14 @@
                     console.error('Error parsing candidate data:', error);
                     // Если данные повреждены, очистить и перенаправить на вход
                     localStorage.clear();
+                    sessionStorage.clear();
                     window.location.href = '/entry.html';
                 }
             } else {
                 // Если нет данных логина, перенаправить на страницу входа
                 console.log('No valid login data found, redirecting to login');
+                localStorage.clear();
+                sessionStorage.clear();
                 window.location.href = '/entry.html';
             }
         }
