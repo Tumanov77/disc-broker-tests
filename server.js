@@ -226,6 +226,91 @@ function formatIntegrityTelegramMessage(candidateData) {
     return message;
 }
 
+// Format OCA test message for Telegram
+function formatOCATelegramMessage(candidateData) {
+    const { name, telegram, position, scores, analysis } = candidateData;
+
+    let message = `📊 *НОВЫЙ КАНДИДАТ - ТЕСТ 3 → OCA (Оксфордский тест личности)*\n`;
+    message += `🎯 *Общие тесты для всех должностей*\n\n`;
+    message += `👤 *Кандидат:* ${name}\n`;
+    message += `📱 *Telegram:* @${telegram.replace('@', '')}\n`;
+    message += `📅 *Дата:* ${new Date().toLocaleString('ru-RU')}\n\n`;
+
+    message += `📊 *РЕЗУЛЬТАТЫ ТЕСТА 3:*\n`;
+    message += `🎯 *Показатели по 10 характеристикам:*\n`;
+    
+    const characteristics = [
+        'Стабильность', 'Счастье', 'Настойчивость', 'Самоконтроль', 'Инициатива',
+        'Коммуникабельность', 'Ответственность', 'Подавление', 'Активность', 'Уровень общения'
+    ];
+    
+    characteristics.forEach((char, index) => {
+        const score = scores[index];
+        let emoji = '🟢';
+        if (score < 0) emoji = '🔴';
+        else if (score < 30) emoji = '🟡';
+        
+        message += `${emoji} ${char}: ${score}\n`;
+    });
+
+    message += `\n💡 *Анализ:* ${analysis.overallAssessment}\n`;
+    message += `🔍 *Рекомендация:* ${analysis.recommendation}\n\n`;
+
+    // Анализ для всех должностей
+    if (analysis.suitability === 'ОТЛИЧНО') {
+        message += `🟢 *ОТЛИЧНЫЙ ПРОФИЛЬ!* Стабильная личность, подходит для любых позиций.\n`;
+        message += `✅ *Рекомендуется для найма* без ограничений.\n\n`;
+    } else if (analysis.suitability === 'ХОРОШО') {
+        message += `🟡 *ХОРОШИЙ ПРОФИЛЬ* - есть потенциал для развития.\n`;
+        message += `⚠️ *Подходит с наблюдением* - возможен тестовый срок.\n\n`;
+    } else if (analysis.suitability === 'ПРОБЛЕМАТИЧНО') {
+        message += `🟠 *ПРОБЛЕМАТИЧНЫЙ ПРОФИЛЬ* - есть серьёзные минусы.\n`;
+        message += `❌ *НЕ РЕКОМЕНДУЕТСЯ* без дополнительной проверки.\n\n`;
+    } else {
+        message += `🔴 *КРИТИЧЕСКИЙ ПРОФИЛЬ* - множественные проблемы.\n`;
+        message += `❌ *НЕ БРАТЬ* - может нанести ущерб компании.\n\n`;
+    }
+
+    message += `🔗 *Следующие шаги:* Связаться с HR @LyubovTarasova11`;
+
+    return message;
+}
+
+// Format Aptitude test message for Telegram
+function formatAptitudeTelegramMessage(candidateData) {
+    const { name, telegram, position, scores, analysis } = candidateData;
+
+    let message = `🎯 *НОВЫЙ КАНДИДАТ - ТЕСТ 4 → Aptitude Test*\n`;
+    message += `🎯 *Общие тесты для всех должностей*\n\n`;
+    message += `👤 *Кандидат:* ${name}\n`;
+    message += `📱 *Telegram:* @${telegram.replace('@', '')}\n`;
+    message += `📅 *Дата:* ${new Date().toLocaleString('ru-RU')}\n\n`;
+
+    message += `📊 *РЕЗУЛЬТАТЫ ТЕСТА 4:*\n`;
+    message += `🎯 *Общий балл:* ${scores.totalScore}/60\n`;
+    message += `🔍 *Внимание:* ${scores.attentionScore}/20\n`;
+    message += `🧠 *Понимание:* ${scores.understandingScore}/20\n`;
+    message += `⚡ *Логика:* ${scores.logicScore}/20\n`;
+    message += `💡 *Уровень:* ${analysis.level}\n`;
+    message += `🔍 *Описание:* ${analysis.recommendation}\n\n`;
+
+    // Анализ способностей
+    if (scores.totalScore >= 45) {
+        message += `🟢 *ВЫСОКИЕ СПОСОБНОСТИ!* Отличное внимание, понимание и продуктивное мышление.\n`;
+        message += `✅ *Рекомендуется для найма* на любые позиции, включая аналитические.\n\n`;
+    } else if (scores.totalScore >= 30) {
+        message += `🟡 *СРЕДНИЕ СПОСОБНОСТИ* - хорошие базовые навыки.\n`;
+        message += `⚠️ *Подходит для большинства позиций* с возможностью развития.\n\n`;
+    } else {
+        message += `🟠 *НИЗКИЕ СПОСОБНОСТИ* - требуют развития навыков.\n`;
+        message += `❌ *НЕ РЕКОМЕНДУЕТСЯ* для аналитических или сложных позиций.\n\n`;
+    }
+
+    message += `🔗 *Следующие шаги:* Связаться с HR @LyubovTarasova11`;
+
+    return message;
+}
+
 // API endpoint to receive DISC test results
 app.post('/api/submit-disc', async (req, res) => {
     try {
@@ -470,6 +555,102 @@ app.post('/api/submit-integrity', async (req, res) => {
     }
 });
 
+// API endpoint to receive OCA test results
+app.post('/api/submit-oca', async (req, res) => {
+    try {
+        const { name, telegram, scores, analysis } = req.body;
+
+        // Validate data
+        if (!name || !telegram || !scores || !analysis) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+
+        // Prepare candidate data
+        const candidateData = {
+            name,
+            telegram,
+            position: 'общие тесты', // General test
+            scores,
+            analysis,
+            timestamp: new Date().toISOString()
+        };
+
+        // Send to Telegram channel
+        const message = formatOCATelegramMessage(candidateData);
+
+        try {
+            await bot.sendMessage(CHANNEL_ID, message, {
+                parse_mode: 'Markdown',
+                disable_web_page_preview: true
+            });
+        } catch (telegramError) {
+            console.error('Telegram error:', telegramError);
+            // Continue even if Telegram fails
+        }
+
+        // Log to console for debugging
+        console.log('OCA test submitted:', candidateData);
+
+        res.json({
+            success: true,
+            message: 'Результаты отправлены в Telegram канал',
+            analysis: analysis
+        });
+
+    } catch (error) {
+        console.error('Error processing OCA test:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// API endpoint to receive Aptitude test results
+app.post('/api/submit-aptitude', async (req, res) => {
+    try {
+        const { name, telegram, scores, analysis } = req.body;
+
+        // Validate data
+        if (!name || !telegram || !scores || !analysis) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+
+        // Prepare candidate data
+        const candidateData = {
+            name,
+            telegram,
+            position: 'общие тесты', // General test
+            scores,
+            analysis,
+            timestamp: new Date().toISOString()
+        };
+
+        // Send to Telegram channel
+        const message = formatAptitudeTelegramMessage(candidateData);
+
+        try {
+            await bot.sendMessage(CHANNEL_ID, message, {
+                parse_mode: 'Markdown',
+                disable_web_page_preview: true
+            });
+        } catch (telegramError) {
+            console.error('Telegram error:', telegramError);
+            // Continue even if Telegram fails
+        }
+
+        // Log to console for debugging
+        console.log('Aptitude test submitted:', candidateData);
+
+        res.json({
+            success: true,
+            message: 'Результаты отправлены в Telegram канал',
+            analysis: analysis
+        });
+
+    } catch (error) {
+        console.error('Error processing Aptitude test:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
     res.json({ status: 'OK', timestamp: new Date().toISOString() });
@@ -480,26 +661,58 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/public/index.html');
 });
 
-// Serve general tests
-app.get('/general/disc-test.html', (req, res) => {
+// Serve tests with short codes
+app.get('/t1', (req, res) => {
     res.sendFile(__dirname + '/public/general/disc-test.html');
 });
 
-app.get('/general/eq-test.html', (req, res) => {
+app.get('/t2', (req, res) => {
     res.sendFile(__dirname + '/public/general/eq-test.html');
 });
 
-app.get('/general/hubbard-test.html', (req, res) => {
+app.get('/t3', (req, res) => {
+    res.sendFile(__dirname + '/public/general/oca-test.html');
+});
+
+app.get('/t4', (req, res) => {
+    res.sendFile(__dirname + '/public/general/aptitude-test.html');
+});
+
+app.get('/t5', (req, res) => {
     res.sendFile(__dirname + '/public/general/hubbard-test.html');
 });
 
-app.get('/general/integrity-test.html', (req, res) => {
+app.get('/t6', (req, res) => {
     res.sendFile(__dirname + '/public/general/integrity-test.html');
 });
 
-// Serve broker tests
-app.get('/broker/spq-test.html', (req, res) => {
+app.get('/b1', (req, res) => {
     res.sendFile(__dirname + '/public/broker/spq-test.html');
+});
+
+// Legacy routes for backward compatibility
+app.get('/general/disc-test.html', (req, res) => {
+    res.redirect('/t1');
+});
+
+app.get('/general/eq-test.html', (req, res) => {
+    res.redirect('/t2');
+});
+
+app.get('/general/hubbard-test.html', (req, res) => {
+    res.redirect('/t5');
+});
+
+app.get('/general/integrity-test.html', (req, res) => {
+    res.redirect('/t6');
+});
+
+app.get('/general/oca-test.html', (req, res) => {
+    res.redirect('/t3');
+});
+
+app.get('/broker/spq-test.html', (req, res) => {
+    res.redirect('/b1');
 });
 
 // Legacy routes for backward compatibility

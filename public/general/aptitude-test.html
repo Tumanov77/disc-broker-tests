@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест 4 - Aptitude Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+            margin-top: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header .subtitle {
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .header .description {
+            color: #888;
+            font-size: 1em;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .question-block {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+        }
+
+        .question-block h3 {
+            color: #333;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .question {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #e1e5e9;
+        }
+
+        .question h4 {
+            color: #333;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .question p {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: #e3f2fd;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .option label {
+            cursor: pointer;
+            font-size: 1em;
+            color: #333;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 30px;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 1px solid #c3e6cb;
+            text-align: center;
+            display: none;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 1px solid #f5c6cb;
+            text-align: center;
+            display: none;
+        }
+
+        .progress-bar {
+            background: #e1e5e9;
+            border-radius: 10px;
+            height: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin-top: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Тест 4</h1>
+            <div class="subtitle">Психологическое тестирование</div>
+            <div class="description">
+                Этот тест оценивает вашу способность к концентрации внимания, пониманию информации и продуктивному мышлению. 
+                Отвечайте честно и не спешите — качество важнее скорости.
+            </div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <form id="aptitudeForm">
+            <div class="form-group">
+                <label for="name">Ваше имя:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="telegram">Ваш Telegram (без @):</label>
+                <input type="text" id="telegram" name="telegram" required placeholder="например: ivan_petrov">
+            </div>
+
+            <!-- Блок 1: Внимание -->
+            <div class="question-block">
+                <h3>🔍 Блок 1: Внимание (10 вопросов)</h3>
+                <p>Оцените вашу способность концентрироваться и замечать детали.</p>
+
+                <div class="question">
+                    <h4>1. Как часто вы замечаете мелкие детали, которые упускают другие?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="attention_1" value="2" id="attention_1_a">
+                            <label for="attention_1_a">Очень часто — это моя сильная сторона</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="attention_1" value="1" id="attention_1_b">
+                            <label for="attention_1_b">Иногда замечаю</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="attention_1" value="0" id="attention_1_c">
+                            <label for="attention_1_c">Редко — обычно сосредоточен на общем</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h4>2. Можете ли вы долго работать над одной задачей без отвлечений?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="attention_2" value="2" id="attention_2_a">
+                            <label for="attention_2_a">Да, могу часами концентрироваться</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="attention_2" value="1" id="attention_2_b">
+                            <label for="attention_2_b">Иногда, но нужны перерывы</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="attention_2" value="0" id="attention_2_c">
+                            <label for="attention_2_c">Нет, часто отвлекаюсь</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h4>3. Легко ли вы находите ошибки в тексте или числах?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="attention_3" value="2" id="attention_3_a">
+                            <label for="attention_3_a">Да, обычно сразу вижу</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="attention_3" value="1" id="attention_3_b">
+                            <label for="attention_3_b">Иногда, если внимательно смотрю</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="attention_3" value="0" id="attention_3_c">
+                            <label for="attention_3_c">Нет, часто пропускаю</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h4>4. Как вы себя чувствуете при работе с большими объёмами информации?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="attention_4" value="2" id="attention_4_a">
+                            <label for="attention_4_a">Комфортно, легко структурирую</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="attention_4" value="1" id="attention_4_b">
+                            <label for="attention_4_b">Нормально, но нужна система</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="attention_4" value="0" id="attention_4_c">
+                            <label for="attention_4_c">Сложно, теряюсь в деталях</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h4>5. Можете ли вы одновременно следить за несколькими задачами?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="attention_5" value="2" id="attention_5_a">
+                            <label for="attention_5_a">Да, легко переключаюсь между ними</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="attention_5" value="1" id="attention_5_b">
+                            <label for="attention_5_b">Могу, но с трудом</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="attention_5" value="0" id="attention_5_c">
+                            <label for="attention_5_c">Нет, лучше делать по одной</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h4>6. Как быстро вы замечаете изменения в привычной обстановке?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="attention_6" value="2" id="attention_6_a">
+                            <label for="attention_6_a">Очень быстро — сразу бросается в глаза</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="attention_6" value="1" id="attention_6_b">
+                            <label for="attention_6_b">Через некоторое время</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="attention_6" value="0" id="attention_6_c">
+                            <label for="attention_6_c">Медленно или не замечаю</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h4>7. Легко ли вам запоминать последовательности цифр или слов?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="attention_7" value="2" id="attention_7_a">
+                            <label for="attention_7_a">Да, у меня хорошая память на детали</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="attention_7" value="1" id="attention_7_b">
+                            <label for="attention_7_b">Зависит от сложности</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="attention_7" value="0" id="attention_7_c">
+                            <label for="attention_7_c">Нет, быстро забываю</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h4>8. Как вы работаете в шумной обстановке?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="attention_8" value="2" id="attention_8_a">
+                            <label for="attention_8_a">Легко абстрагируюсь от шума</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="attention_8" value="1" id="attention_8_b">
+                            <label for="attention_8_b">Могу, но предпочитаю тишину</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="attention_8" value="0" id="attention_8_c">
+                            <label for="attention_8_c">Очень мешает сосредоточиться</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h4>9. Проверяете ли вы свою работу на ошибки?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="attention_9" value="2" id="attention_9_a">
+                            <label for="attention_9_a">Всегда, несколько раз</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="attention_9" value="1" id="attention_9_b">
+                            <label for="attention_9_b">Иногда, если время есть</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="attention_9" value="0" id="attention_9_c">
+                            <label for="attention_9_c">Редко, полагаюсь на первый раз</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h4>10. Можете ли вы быстро найти нужную информацию в большом документе?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="attention_10" value="2" id="attention_10_a">
+                            <label for="attention_10_a">Да, умею эффективно искать</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="attention_10" value="1" id="attention_10_b">
+                            <label for="attention_10_b">Могу, но это занимает время</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="attention_10" value="0" id="attention_10_c">
+                            <label for="attention_10_c">Нет, часто теряюсь</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Блок 2: Понимание -->
+            <div class="question-block">
+                <h3>🧠 Блок 2: Понимание (10 вопросов)</h3>
+                <p>Оцените вашу способность понимать и анализировать информацию.</p>
+
+                <div class="question">
+                    <h4>1. Легко ли вы понимаете сложные инструкции с первого раза?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="understanding_1" value="2" id="understanding_1_a">
+                            <label for="understanding_1_a">Да, обычно всё понятно сразу</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="understanding_1" value="1" id="understanding_1_b">
+                            <label for="understanding_1_b">Иногда нужно переспросить</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="understanding_1" value="0" id="understanding_1_c">
+                            <label for="understanding_1_c">Нет, часто нужно объяснять несколько раз</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h4>2. Можете ли вы объяснить сложную тему простыми словами?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="understanding_2" value="2" id="understanding_2_a">
+                            <label for="understanding_2_a">Да, умею упрощать и структурировать</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="understanding_2" value="1" id="understanding_2_b">
+                            <label for="understanding_2_b">Иногда получается</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="understanding_2" value="0" id="understanding_2_c">
+                            <label for="understanding_2_c">Нет, сам путаюсь в объяснениях</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h4>3. Как быстро вы схватываете суть нового дела или проекта?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="understanding_3" value="2" id="understanding_3_a">
+                            <label for="understanding_3_a">Очень быстро — сразу вижу картину</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="understanding_3" value="1" id="understanding_3_b">
+                            <label for="understanding_3_b">Нормально, нужно немного времени</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="understanding_3" value="0" id="understanding_3_c">
+                            <label for="understanding_3_c">Медленно, много вопросов</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h4>4. Легко ли вы находите связи между разными идеями или фактами?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="understanding_4" value="2" id="understanding_4_a">
+                            <label for="understanding_4_a">Да, вижу закономерности и связи</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="understanding_4" value="1" id="understanding_4_b">
+                            <label for="understanding_4_b">Иногда, если подумать</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="understanding_4" value="0" id="understanding_4_c">
+                            <label for="understanding_4_c">Нет, не замечаю связи</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h4>5. Можете ли вы предсказать последствия своих действий?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="understanding_5" value="2" id="understanding_5_a">
+                            <label for="understanding_5_a">Да, обычно предвижу результат</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="understanding_5" value="1" id="understanding_5_b">
+                            <label for="understanding_5_b">Иногда, но не всегда</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="understanding_5" value="0" id="understanding_5_c">
+                            <label for="understanding_5_c">Нет, часто действую интуитивно</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h4>6. Как вы работаете с противоречивой информацией?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="understanding_6" value="2" id="understanding_6_a">
+                            <label for="understanding_6_a">Анализирую и нахожу истину</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="understanding_6" value="1" id="understanding_6_b">
+                            <label for="understanding_6_b">Стараюсь разобраться, но сложно</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="understanding_6" value="0" id="understanding_6_c">
+                            <label for="understanding_6_c">Путаюсь и не знаю, кому верить</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h4>7. Легко ли вы понимаете графики, схемы и диаграммы?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="understanding_7" value="2" id="understanding_7_a">
+                            <label for="understanding_7_a">Да, быстро читаю визуальную информацию</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="understanding_7" value="1" id="understanding_7_b">
+                            <label for="understanding_7_b">Иногда, если подумать</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="understanding_7" value="0" id="understanding_7_c">
+                            <label for="understanding_7_c">Нет, предпочитаю текст</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h4>8. Можете ли вы выделить главное из большого объёма информации?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="understanding_8" value="2" id="understanding_8_a">
+                            <label for="understanding_8_a">Да, умею фильтровать и структурировать</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="understanding_8" value="1" id="understanding_8_b">
+                            <label for="understanding_8_b">Иногда получается</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="understanding_8" value="0" id="understanding_8_c">
+                            <label for="understanding_8_c">Нет, теряюсь в деталях</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h4>9. Как быстро вы обучаетесь новым навыкам?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="understanding_9" value="2" id="understanding_9_a">
+                            <label for="understanding_9_a">Очень быстро — схватываю на лету</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="understanding_9" value="1" id="understanding_9_b">
+                            <label for="understanding_9_b">Нормально, нужно практиковаться</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="understanding_9" value="0" id="understanding_9_c">
+                            <label for="understanding_9_c">Медленно, много повторений</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h4>10. Можете ли вы решить задачу, если часть информации отсутствует?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="understanding_10" value="2" id="understanding_10_a">
+                            <label for="understanding_10_a">Да, использую логику и опыт</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="understanding_10" value="1" id="understanding_10_b">
+                            <label for="understanding_10_b">Иногда, если не критично</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="understanding_10" value="0" id="understanding_10_c">
+                            <label for="understanding_10_c">Нет, нужна полная информация</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Блок 3: Логика и продуктивное мышление -->
+            <div class="question-block">
+                <h3>⚡ Блок 3: Логика и продуктивное мышление (10 вопросов)</h3>
+                <p>Оцените вашу способность к аналитическому и творческому мышлению.</p>
+
+                <div class="question">
+                    <h4>1. Легко ли вы находите нестандартные решения проблем?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="logic_1" value="2" id="logic_1_a">
+                            <label for="logic_1_a">Да, часто придумываю креативные решения</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="logic_1" value="1" id="logic_1_b">
+                            <label for="logic_1_b">Иногда, если подумать</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="logic_1" value="0" id="logic_1_c">
+                            <label for="logic_1_c">Нет, предпочитаю проверенные методы</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h4>2. Можете ли вы быстро оценить плюсы и минусы решения?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="logic_2" value="2" id="logic_2_a">
+                            <label for="logic_2_a">Да, сразу вижу все аспекты</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="logic_2" value="1" id="logic_2_b">
+                            <label for="logic_2_b">Иногда, нужно время</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="logic_2" value="0" id="logic_2_c">
+                            <label for="logic_2_c">Нет, часто упускаю важное</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h4>3. Как вы подходите к сложным задачам?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="logic_3" value="2" id="logic_3_a">
+                            <label for="logic_3_a">Разбиваю на этапы и планирую</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="logic_3" value="1" id="logic_3_b">
+                            <label for="logic_3_b">Начинаю и смотрю, как пойдёт</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="logic_3" value="0" id="logic_3_c">
+                            <label for="logic_3_c">Пытаюсь решить сразу целиком</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h4>4. Можете ли вы представить несколько вариантов развития событий?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="logic_4" value="2" id="logic_4_a">
+                            <label for="logic_4_a">Да, рассматриваю разные сценарии</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="logic_4" value="1" id="logic_4_b">
+                            <label for="logic_4_b">Иногда, если подумать</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="logic_4" value="0" id="logic_4_c">
+                            <label for="logic_4_c">Нет, обычно один вариант</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h4>5. Легко ли вы адаптируетесь к изменениям в планах?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="logic_5" value="2" id="logic_5_a">
+                            <label for="logic_5_a">Да, быстро перестраиваюсь</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="logic_5" value="1" id="logic_5_b">
+                            <label for="logic_5_b">Иногда, но предпочитаю стабильность</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="logic_5" value="0" id="logic_5_c">
+                            <label for="logic_5_c">Нет, изменения меня расстраивают</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h4>6. Можете ли вы найти закономерность в хаотичных данных?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="logic_6" value="2" id="logic_6_a">
+                            <label for="logic_6_a">Да, умею находить паттерны</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="logic_6" value="1" id="logic_6_b">
+                            <label for="logic_6_b">Иногда, если повезёт</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="logic_6" value="0" id="logic_6_c">
+                            <label for="logic_6_c">Нет, не вижу закономерностей</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h4>7. Как вы принимаете решения в условиях неопределённости?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="logic_7" value="2" id="logic_7_a">
+                            <label for="logic_7_a">Анализирую риски и принимаю решение</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="logic_7" value="1" id="logic_7_b">
+                            <label for="logic_7_b">Стараюсь собрать больше информации</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="logic_7" value="0" id="logic_7_c">
+                            <label for="logic_7_c">Избегаю таких решений</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h4>8. Можете ли вы улучшить существующий процесс?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="logic_8" value="2" id="logic_8_a">
+                            <label for="logic_8_a">Да, часто вижу возможности для оптимизации</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="logic_8" value="1" id="logic_8_b">
+                            <label for="logic_8_b">Иногда, если подумать</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="logic_8" value="0" id="logic_8_c">
+                            <label for="logic_8_c">Нет, если работает — не трогаю</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h4>9. Легко ли вы генерируете новые идеи?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="logic_9" value="2" id="logic_9_a">
+                            <label for="logic_9_a">Да, у меня много креативных идей</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="logic_9" value="1" id="logic_9_b">
+                            <label for="logic_9_b">Иногда, в подходящей атмосфере</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="logic_9" value="0" id="logic_9_c">
+                            <label for="logic_9_c">Нет, предпочитаю работать по шаблонам</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h4>10. Можете ли вы объяснить свою логику другим людям?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="logic_10" value="2" id="logic_10_a">
+                            <label for="logic_10_a">Да, умею структурированно объяснять</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="logic_10" value="1" id="logic_10_b">
+                            <label for="logic_10_b">Иногда получается</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="logic_10" value="0" id="logic_10_c">
+                            <label for="logic_10_c">Нет, сам понимаю, но объяснить сложно</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">Отправить результаты</button>
+        </form>
+
+        <div class="success-message" id="successMessage">
+            <h3>✅ Спасибо за прохождение теста!</h3>
+            <p>Ваши результаты отправлены в HR отдел. Мы свяжемся с вами в ближайшее время.</p>
+        </div>
+
+        <div class="error-message" id="errorMessage">
+            <h3>❌ Ошибка отправки</h3>
+            <p>Произошла ошибка при отправке результатов. Попробуйте ещё раз.</p>
+        </div>
+    </div>
+
+    <script>
+        // Progress tracking
+        const progressFill = document.getElementById('progressFill');
+        const totalQuestions = 30;
+        let answeredQuestions = 0;
+
+        function updateProgress() {
+            const progress = (answeredQuestions / totalQuestions) * 100;
+            progressFill.style.width = progress + '%';
+        }
+
+        // Track radio button changes
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Check if this question was already answered
+                const questionName = this.name;
+                const wasAnswered = document.querySelector(`input[name="${questionName}"]:checked`);
+                if (!wasAnswered || this.checked) {
+                    if (this.checked && !wasAnswered) {
+                        answeredQuestions++;
+                    } else if (!this.checked && wasAnswered) {
+                        answeredQuestions--;
+                    }
+                    updateProgress();
+                }
+            });
+        });
+
+        // Form submission
+        document.getElementById('aptitudeForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Get form data
+            const formData = new FormData(this);
+            const name = formData.get('name');
+            const telegram = formData.get('telegram');
+
+            // Validate required fields
+            if (!name || !telegram) {
+                alert('Пожалуйста, заполните все обязательные поля');
+                return;
+            }
+
+            // Calculate scores for each block
+            const attentionScores = [];
+            const understandingScores = [];
+            const logicScores = [];
+
+            for (let i = 1; i <= 10; i++) {
+                const attentionRadio = document.querySelector(`input[name="attention_${i}"]:checked`);
+                const understandingRadio = document.querySelector(`input[name="understanding_${i}"]:checked`);
+                const logicRadio = document.querySelector(`input[name="logic_${i}"]:checked`);
+
+                if (attentionRadio) attentionScores.push(parseInt(attentionRadio.value));
+                if (understandingRadio) understandingScores.push(parseInt(understandingRadio.value));
+                if (logicRadio) logicScores.push(parseInt(logicRadio.value));
+            }
+
+            // Check if all questions are answered
+            if (attentionScores.length !== 10 || understandingScores.length !== 10 || logicScores.length !== 10) {
+                alert('Пожалуйста, ответьте на все вопросы');
+                return;
+            }
+
+            // Calculate total scores
+            const attentionTotal = attentionScores.reduce((sum, score) => sum + score, 0);
+            const understandingTotal = understandingScores.reduce((sum, score) => sum + score, 0);
+            const logicTotal = logicScores.reduce((sum, score) => sum + score, 0);
+            const totalScore = attentionTotal + understandingTotal + logicTotal;
+
+            // Determine level and recommendation
+            let level, recommendation;
+            if (totalScore >= 45) {
+                level = 'Высокий';
+                recommendation = 'Отличные способности к концентрации, пониманию и продуктивному мышлению';
+            } else if (totalScore >= 30) {
+                level = 'Средний';
+                recommendation = 'Хорошие базовые способности, есть потенциал для развития';
+            } else {
+                level = 'Низкий';
+                recommendation = 'Требуется развитие навыков внимания и мышления';
+            }
+
+            // Prepare analysis
+            const analysis = {
+                level: level,
+                recommendation: recommendation,
+                attentionScore: attentionTotal,
+                understandingScore: understandingTotal,
+                logicScore: logicTotal,
+                totalScore: totalScore,
+                attentionScores: attentionScores,
+                understandingScores: understandingScores,
+                logicScores: logicScores
+            };
+
+            // Disable submit button
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Отправка...';
+
+            try {
+                const response = await fetch('/api/submit-aptitude', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        telegram: telegram,
+                        scores: analysis,
+                        analysis: analysis
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    this.style.display = 'none';
+                    successMessage.style.display = 'block';
+                } else {
+                    throw new Error(result.error || 'Unknown error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                errorMessage.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Отправить результаты';
+            }
+        });
+
+        // Add visual feedback for option selection
+        document.querySelectorAll('.option').forEach(option => {
+            option.addEventListener('click', function() {
+                const radio = this.querySelector('input[type="radio"]');
+                if (radio) {
+                    radio.checked = true;
+                    // Remove selected class from siblings
+                    this.parentNode.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+                    // Add selected class to current option
+                    this.classList.add('selected');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
