@@ -429,21 +429,21 @@
                 </div>
                 
                 <!-- DISC -->
-                <div class="test-card" onclick="window.location.href='/t1'">
+                <div class="test-card" onclick="checkAuthAndGo('/t1')">
                     <h4>Тест 1 <span class="time-info">(5 мин)</span></h4>
-                    <a href="/t1" class="test-link">Начать тест</a>
+                    <a href="javascript:void(0)" class="test-link" onclick="checkAuthAndGo('/t1')">Начать тест</a>
                 </div>
 
                 <!-- Hubbard -->
-                <div class="test-card" onclick="window.location.href='/t2'">
+                <div class="test-card" onclick="checkAuthAndGo('/t2')">
                     <h4>Тест 2 <span class="time-info">(5 мин)</span></h4>
-                    <a href="/t2" class="test-link">Начать тест</a>
+                    <a href="javascript:void(0)" class="test-link" onclick="checkAuthAndGo('/t2')">Начать тест</a>
                 </div>
 
                 <!-- EQ -->
-                <div class="test-card" onclick="window.location.href='/t3'">
+                <div class="test-card" onclick="checkAuthAndGo('/t3')">
                     <h4>Тест 3 <span class="time-info">(10–15 мин)</span></h4>
-                    <a href="/t3" class="test-link">Начать тест</a>
+                    <a href="javascript:void(0)" class="test-link" onclick="checkAuthAndGo('/t3')">Начать тест</a>
                 </div>
                 
             </div>
@@ -453,15 +453,15 @@
                 <h3 class="step-title">✅ Этап 2. Ближе узнаём вашу личность</h3>
                 
                 <!-- Aptitude -->
-                <div class="test-card" onclick="window.location.href='/t4'">
+                <div class="test-card" onclick="checkAuthAndGo('/t4')">
                     <h4>Тест 4 <span class="time-info">(15–20 мин)</span></h4>
-                    <a href="/t4" class="test-link">Начать тест</a>
+                    <a href="javascript:void(0)" class="test-link" onclick="checkAuthAndGo('/t4')">Начать тест</a>
                 </div>
 
                 <!-- Integrity -->
-                <div class="test-card" onclick="window.location.href='/t5'">
+                <div class="test-card" onclick="checkAuthAndGo('/t5')">
                     <h4>Тест 5 <span class="time-info">(10–15 мин)</span></h4>
-                    <a href="/t5" class="test-link">Начать тест</a>
+                    <a href="javascript:void(0)" class="test-link" onclick="checkAuthAndGo('/t5')">Начать тест</a>
                 </div>
             </div>
 
@@ -498,9 +498,9 @@
                 </div>
                 
                 <!-- OCA -->
-                <div class="test-card" onclick="window.location.href='/t6'">
+                <div class="test-card" onclick="checkAuthAndGo('/t6')">
                     <h4>Тест 6 <span class="time-info">(25–30 мин)</span></h4>
-                    <a href="/t6" class="test-link">Начать финальный тест</a>
+                    <a href="javascript:void(0)" class="test-link" onclick="checkAuthAndGo('/t6')">Начать финальный тест</a>
                 </div>
             </div>
 
@@ -542,14 +542,6 @@
             // Добавляем эффект при клике на карточку
             document.querySelectorAll('.test-card').forEach(card => {
                 card.addEventListener('click', function() {
-                    // Проверяем, авторизован ли пользователь
-                    const isLoggedIn = localStorage.getItem('isLoggedIn');
-                    if (!isLoggedIn) {
-                        alert('Для прохождения тестов необходимо войти в систему');
-                        window.location.href = '/entry.html';
-                        return;
-                    }
-                    
                     this.style.transform = 'scale(0.98)';
                     setTimeout(() => {
                         this.style.transform = 'scale(1)';
@@ -596,12 +588,9 @@
                     window.location.href = '/entry.html';
                 }
             } else {
-                // Если нет данных логина, показать кнопку входа
-                console.log('No login data found, showing login prompt');
-                document.getElementById('loginPrompt').style.display = 'flex';
-                
-                // Показать все тесты для демонстрации
-                showRoleSpecificTests('broker');
+                // Если нет данных логина, перенаправить на страницу входа
+                console.log('No login data found, redirecting to login');
+                window.location.href = '/entry.html';
             }
         }
 
@@ -627,16 +616,16 @@
             
             if (role === 'broker') {
                 roleTestsContainer.innerHTML = `
-                    <div class="test-card" onclick="window.location.href='/b1'">
+                    <div class="test-card" onclick="checkAuthAndGo('/b1')">
                         <h4>🏠 Тест 7 - настойчивость в продажах <span class="time-info">(8-12 мин)</span></h4>
-                        <a href="/b1" class="test-link">Начать тест</a>
+                        <a href="javascript:void(0)" class="test-link" onclick="checkAuthAndGo('/b1')">Начать тест</a>
                     </div>
                 `;
             } else if (role === 'sales_manager') {
                 roleTestsContainer.innerHTML = `
-                    <div class="test-card" onclick="window.location.href='/kfu'">
+                    <div class="test-card" onclick="checkAuthAndGo('/kfu')">
                         <h4>👔 КФУ - Критические факторы успеха <span class="time-info">(5-7 мин)</span></h4>
-                        <a href="/kfu" class="test-link">Начать проверку КФУ</a>
+                        <a href="javascript:void(0)" class="test-link" onclick="checkAuthAndGo('/kfu')">Начать проверку КФУ</a>
                     </div>
                 `;
             } else if (role === 'marketing_manager' || role === 'marketing_analyst' || role === 'financial_director' || 
@@ -688,6 +677,18 @@
             console.log('Logout called');
             localStorage.clear(); // Очищаем все данные
             window.location.href = '/entry.html';
+        }
+
+        function checkAuthAndGo(url) {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const candidateData = localStorage.getItem('candidateData');
+            
+            if (isLoggedIn && candidateData) {
+                window.location.href = url;
+            } else {
+                alert('Для прохождения тестов необходимо войти в систему');
+                window.location.href = '/entry.html';
+            }
         }
 
         function loadProgress() {
