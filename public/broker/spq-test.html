@@ -221,7 +221,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Тест 7</h1>
+            <div class="user-info" id="userInfo" style="display: none;"><div class="user-data"><span id="userName"></span> (<span id="userTelegram"></span>)</div><button class="logout-btn" onclick="logout()">Выйти</button></div><h1>Тест 7</h1>
             <p>🏠 Профильное тестирование для брокеров</p>
         </div>
 
@@ -541,7 +541,7 @@
                 // Скрываем загрузку
                 document.getElementById('loading').classList.remove('show');
                 
-                if (result.success) {
+                if (result.success) { const progress = JSON.parse(localStorage.getItem("testProgress") || "{}"); progress.test7Completed = true; localStorage.setItem("testProgress", JSON.stringify(progress)); {
                     // Показываем успешное сообщение
                     document.getElementById('successMessage').classList.add('show');
                     

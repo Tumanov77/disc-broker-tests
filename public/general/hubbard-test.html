@@ -660,6 +660,11 @@
                 const result = await response.json();
                 
                 if (result.success) {
+                    // Обновляем прогресс
+                    const progress = JSON.parse(localStorage.getItem('testProgress') || '{}');
+                    progress.test2Completed = true;
+                    localStorage.setItem('testProgress', JSON.stringify(progress));
+                    
                     document.getElementById('loading').style.display = 'none';
                     document.getElementById('successMessage').style.display = 'block';
                     document.getElementById('hubbardForm').style.display = 'none';
