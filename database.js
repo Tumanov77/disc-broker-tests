@@ -163,6 +163,24 @@ const User = {
                 }
             });
         });
+    },
+
+    // Получение пользователя по ID
+    findById: (id) => {
+        return new Promise((resolve, reject) => {
+            db.get('SELECT * FROM users WHERE id = ?', [id], (err, row) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(row);
+                }
+            });
+        });
+    },
+
+    // Получение всех пользователей (алиас для getAll)
+    findAll: () => {
+        return User.getAll();
     }
 };
 
@@ -280,6 +298,56 @@ const TestResult = {
                 }
             });
         });
+    },
+
+    // Получение результатов по пользователю
+    getByUser: (userId) => {
+        return new Promise((resolve, reject) => {
+            db.all(`
+                SELECT tr.*, u.full_name, u.telegram, u.role
+                FROM test_results tr
+                JOIN users u ON tr.user_id = u.id
+                WHERE tr.user_id = ?
+                ORDER BY tr.completed_at DESC
+            `, [userId], (err, rows) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    const results = rows.map(row => ({
+                        ...row,
+                        answers: row.answers ? JSON.parse(row.answers) : null
+                    }));
+                    resolve(results);
+                }
+            });
+        });
+    },
+
+    // Получение статистики по ролям (для TestResult)
+    getStatsByRole: () => {
+        return new Promise((resolve, reject) => {
+            db.all(`
+                SELECT 
+                    u.role,
+                    COUNT(tr.id) as test_count,
+                    COUNT(CASE WHEN tr.passed = 1 THEN 1 END) as passed_count
+                FROM users u
+                LEFT JOIN test_results tr ON u.id = tr.user_id
+                GROUP BY u.role
+                ORDER BY test_count DESC
+            `, (err, rows) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(rows);
+                }
+            });
+        });
+    },
+
+    // Получение статистики тестов (алиас для getStats)
+    getTestStatistics: () => {
+        return TestResult.getStats();
     }
 };
 

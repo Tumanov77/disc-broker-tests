@@ -1063,14 +1063,8 @@ function formatKFUTelegramMessage(data) {
 // Получить всех пользователей
 app.get('/api/users', async (req, res) => {
     try {
-        // Заглушка для тестирования
-        res.json({ 
-            success: true, 
-            data: [
-                { id: 1, fullName: "Иванов Иван", telegram: "@ivanov", role: "broker", is_active: true },
-                { id: 2, fullName: "Петров Петр", telegram: "@petrov", role: "broker", is_active: true }
-            ] 
-        });
+        const users = await User.getAll();
+        res.json({ success: true, data: users });
     } catch (error) {
         console.error('Error fetching users:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -1148,22 +1142,24 @@ app.get('/api/sessions/active', async (req, res) => {
 // Общая статистика
 app.get('/api/stats/overview', async (req, res) => {
     try {
-        // Заглушка для тестирования
+        const [users, testStats, roleStats] = await Promise.all([
+            User.getAll(),
+            TestResult.getStats(),
+            User.getStatsByRole()
+        ]);
+        
+        const totalUsers = users.length;
+        const activeUsers = users.filter(u => u.is_active).length;
+        const totalTests = testStats.reduce((sum, stat) => sum + stat.total_attempts, 0);
+        
         res.json({
             success: true,
             data: {
-                totalUsers: 25,
-                activeUsers: 23,
-                totalTests: 47,
-                usersByRole: [
-                    { role: 'broker', count: 15 },
-                    { role: 'general', count: 10 }
-                ],
-                testStats: [
-                    { testType: 'disc', total_attempts: 20 },
-                    { testType: 'eq', total_attempts: 15 },
-                    { testType: 'spq', total_attempts: 12 }
-                ]
+                totalUsers,
+                activeUsers,
+                totalTests,
+                usersByRole: roleStats,
+                testStats
             }
         });
     } catch (error) {
