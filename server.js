@@ -190,6 +190,42 @@ function formatHubbardTelegramMessage(candidateData) {
     return message;
 }
 
+// Format Integrity test message for Telegram
+function formatIntegrityTelegramMessage(candidateData) {
+    const { name, telegram, position, score, analysis } = candidateData;
+
+    let message = `✅ *НОВЫЙ КАНДИДАТ - ТЕСТ 6 → Integrity Test*\n`;
+    message += `🎯 *Общие тесты для всех должностей*\n\n`;
+    message += `👤 *Кандидат:* ${name}\n`;
+    message += `📱 *Telegram:* @${telegram.replace('@', '')}\n`;
+    message += `📅 *Дата:* ${new Date().toLocaleString('ru-RU')}\n\n`;
+
+    message += `📊 *РЕЗУЛЬТАТЫ ТЕСТА 6:*\n`;
+    message += `🎯 *Общий балл:* ${score}/30\n`;
+    message += `💡 *Уровень:* ${analysis.level}\n`;
+    message += `🔍 *Описание:* ${analysis.description}\n`;
+    message += `✅ *Рекомендация:* ${analysis.recommendation}\n\n`;
+
+    // Анализ честности
+    if (score >= 25) {
+        message += `🟢 *ВЫСОКАЯ ЧЕСТНОСТЬ!* Кандидат надёжен и этичен.\n`;
+        message += `✅ *Рекомендуется для найма* на любые позиции, включая руководящие.\n\n`;
+    } else if (score >= 18) {
+        message += `🟡 *СРЕДНИЙ УРОВЕНЬ ЧЕСТНОСТИ* - возможны компромиссы с этикой.\n`;
+        message += `⚠️ *Требует наблюдения* - возможен тестовый срок с контролем.\n\n`;
+    } else if (score >= 12) {
+        message += `🟠 *НИЗКИЙ УРОВЕНЬ ЧЕСТНОСТИ* - рискованный кандидат.\n`;
+        message += `❌ *НЕ РЕКОМЕНДУЕТСЯ* без дополнительной проверки.\n\n`;
+    } else {
+        message += `🔴 *КРИТИЧЕСКИ НИЗКАЯ ЧЕСТНОСТЬ* - источник проблем.\n`;
+        message += `❌ *НЕ БРАТЬ* - может нанести ущерб компании.\n\n`;
+    }
+
+    message += `🔗 *Следующие шаги:* Связаться с HR @LyubovTarasova11`;
+
+    return message;
+}
+
 // API endpoint to receive DISC test results
 app.post('/api/submit-disc', async (req, res) => {
     try {
@@ -386,6 +422,54 @@ app.post('/api/submit-hubbard', async (req, res) => {
     }
 });
 
+// API endpoint to receive Integrity test results
+app.post('/api/submit-integrity', async (req, res) => {
+    try {
+        const { name, telegram, score, analysis } = req.body;
+
+        // Validate data
+        if (!name || !telegram || score === undefined || !analysis) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+
+        // Prepare candidate data
+        const candidateData = {
+            name,
+            telegram,
+            position: 'общие тесты', // General test
+            score,
+            analysis,
+            timestamp: new Date().toISOString()
+        };
+
+        // Send to Telegram channel
+        const message = formatIntegrityTelegramMessage(candidateData);
+
+        try {
+            await bot.sendMessage(CHANNEL_ID, message, {
+                parse_mode: 'Markdown',
+                disable_web_page_preview: true
+            });
+        } catch (telegramError) {
+            console.error('Telegram error:', telegramError);
+            // Continue even if Telegram fails
+        }
+
+        // Log to console for debugging
+        console.log('Integrity test submitted:', candidateData);
+
+        res.json({
+            success: true,
+            message: 'Результаты отправлены в Telegram канал',
+            analysis: analysis
+        });
+
+    } catch (error) {
+        console.error('Error processing Integrity test:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
     res.json({ status: 'OK', timestamp: new Date().toISOString() });
@@ -407,6 +491,10 @@ app.get('/general/eq-test.html', (req, res) => {
 
 app.get('/general/hubbard-test.html', (req, res) => {
     res.sendFile(__dirname + '/public/general/hubbard-test.html');
+});
+
+app.get('/general/integrity-test.html', (req, res) => {
+    res.sendFile(__dirname + '/public/general/integrity-test.html');
 });
 
 // Serve broker tests
