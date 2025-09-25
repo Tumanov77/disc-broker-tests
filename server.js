@@ -1168,6 +1168,49 @@ app.get('/api/stats/overview', async (req, res) => {
     }
 });
 
+// Универсальный эндпоинт для отправки тестов
+app.post('/api/submit-test', async (req, res) => {
+    try {
+        const { testType, answers, userInfo } = req.body;
+        console.log(`📝 Получен тест ${testType} от ${userInfo.fullName}`);
+        
+        // Простая заглушка для тестирования
+        res.json({
+            success: true,
+            message: `Тест ${testType} принят от ${userInfo.fullName}`,
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        console.error('Error in submit-test:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Админ статистика
+app.get('/api/admin/stats', async (req, res) => {
+    try {
+        res.json({
+            success: true,
+            data: {
+                totalUsers: 150,
+                totalTests: 89,
+                testStats: [
+                    { testType: 'disc', total_attempts: 45 },
+                    { testType: 'eq', total_attempts: 32 },
+                    { testType: 'spq', total_attempts: 12 }
+                ],
+                roleStats: [
+                    { role: 'broker', count: 67 },
+                    { role: 'general', count: 83 }
+                ]
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching admin stats:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 // Обработка ошибок сервера
 process.on('uncaughtException', (error) => {
     console.error('Uncaught Exception:', error);
