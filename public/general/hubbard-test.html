@@ -697,7 +697,43 @@
     <div id="update-timestamp" class="update-timestamp"></div>
     
     <script>
+        // Проверка авторизации при загрузке страницы
         document.addEventListener('DOMContentLoaded', function() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const candidateData = localStorage.getItem('candidateData');
+            
+            console.log('Test page loaded, checking auth:');
+            console.log('isLoggedIn:', isLoggedIn);
+            console.log('candidateData:', candidateData);
+            
+            // Если пользователь не авторизован, перенаправляем на главную
+            if (isLoggedIn !== 'true' || !candidateData || candidateData.trim() === '') {
+                console.log('User not logged in, redirecting to main page');
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = '/';
+                return;
+            }
+            
+            try {
+                const userData = JSON.parse(candidateData);
+                if (!userData.fullName || !userData.telegram || !userData.role) {
+                    console.log('Incomplete user data, redirecting to main page');
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    window.location.href = '/';
+                    return;
+                }
+                console.log('User is authorized:', userData.fullName);
+            } catch (error) {
+                console.error('Error parsing user data:', error);
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = '/';
+                return;
+            }
+            
+            // Устанавливаем отметку времени
             const timestampElement = document.getElementById('update-timestamp');
             if (timestampElement) {
                 // Статичная дата последнего обновления на сервере
