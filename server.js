@@ -2,6 +2,7 @@ const express = require('express');
 const TelegramBot = require('node-telegram-bot-api');
 const cors = require('cors');
 require('dotenv').config();
+const { User, TestResult, Session } = require('./database');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -505,23 +506,47 @@ function formatAptitudeTelegramMessage(candidateData) {
 // API endpoint to receive DISC test results
 app.post('/api/submit-disc', async (req, res) => {
     try {
-        const { name, telegram, scores } = req.body;
+        const { name, telegram, scores, role } = req.body;
         
         // Validate data
         if (!name || !telegram || !scores) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
         
+        // Создаем или обновляем пользователя в базе данных
+        const user = await User.create({
+            fullName: name,
+            telegram: telegram,
+            role: role || 'broker'
+        });
+        
         // Analyze the profile
-        const analysis = analyzeDISCProfile(scores, 'брокер по продажам недвижимости');
+        const analysis = analyzeDISCProfile(scores, role || 'брокер по продажам недвижимости');
+        
+        // Сохраняем результат теста в базу данных
+        const testResult = await TestResult.save(user.id, 'DISC', 'personality', {
+            score: scores[analysis.dominantType],
+            maxScore: 24,
+            passed: analysis.suitability !== 'НЕ ПОДХОДИТ',
+            answers: scores,
+            analysis: JSON.stringify(analysis)
+        });
+        
+        // Создаем сессию пользователя
+        await Session.create(user.id, {
+            testCompleted: 'DISC',
+            lastActivity: new Date().toISOString()
+        });
         
         // Prepare candidate data
         const candidateData = {
             name,
             telegram,
-            position: 'брокер по продажам недвижимости',
+            position: role || 'брокер по продажам недвижимости',
             scores,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
+            userId: user.id,
+            testResultId: testResult.id
         };
         
         // Send to Telegram channel
@@ -540,11 +565,13 @@ app.post('/api/submit-disc', async (req, res) => {
         // Log to console for debugging
         console.log('DISC test submitted:', candidateData);
         console.log('Analysis:', analysis);
+        console.log('Saved to database - User ID:', user.id, 'Test Result ID:', testResult.id);
         
         res.json({ 
             success: true, 
-            message: 'Результаты отправлены в Telegram канал',
-            analysis: analysis
+            message: 'Результаты отправлены в Telegram канал и сохранены в базе данных',
+            analysis: analysis,
+            userId: user.id
         });
         
     } catch (error) {
@@ -1006,9 +1033,120 @@ function formatKFUTelegramMessage(data) {
 ⏰ **Время:** ${new Date(data.timestamp).toLocaleString('ru-RU')}`;
 }
 
+// API endpoints for admin panel
+
+// Получить всех пользователей
+app.get('/api/users', async (req, res) => {
+    try {
+        const users = await User.getAll();
+        res.json({ success: true, data: users });
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Получить статистику по ролям
+app.get('/api/stats/roles', async (req, res) => {
+    try {
+        const stats = await User.getStatsByRole();
+        res.json({ success: true, data: stats });
+    } catch (error) {
+        console.error('Error fetching role stats:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Получить все результаты тестов
+app.get('/api/test-results', async (req, res) => {
+    try {
+        const results = await TestResult.getAll();
+        res.json({ success: true, data: results });
+    } catch (error) {
+        console.error('Error fetching test results:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Получить результаты конкретного пользователя
+app.get('/api/user/:userId/results', async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const results = await TestResult.getByUser(userId);
+        res.json({ success: true, data: results });
+    } catch (error) {
+        console.error('Error fetching user results:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Получить результаты по роли
+app.get('/api/results/role/:role', async (req, res) => {
+    try {
+        const role = req.params.role;
+        const results = await TestResult.getByRole(role);
+        res.json({ success: true, data: results });
+    } catch (error) {
+        console.error('Error fetching results by role:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Получить статистику по тестам
+app.get('/api/stats/tests', async (req, res) => {
+    try {
+        const stats = await TestResult.getStats();
+        res.json({ success: true, data: stats });
+    } catch (error) {
+        console.error('Error fetching test stats:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Получить активные сессии
+app.get('/api/sessions/active', async (req, res) => {
+    try {
+        const sessions = await Session.getActive();
+        res.json({ success: true, data: sessions });
+    } catch (error) {
+        console.error('Error fetching active sessions:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Общая статистика
+app.get('/api/stats/overview', async (req, res) => {
+    try {
+        const [users, testStats, roleStats] = await Promise.all([
+            User.getAll(),
+            TestResult.getStats(),
+            User.getStatsByRole()
+        ]);
+        
+        const totalUsers = users.length;
+        const activeUsers = users.filter(u => u.is_active).length;
+        const totalTests = testStats.reduce((sum, stat) => sum + stat.total_attempts, 0);
+        
+        res.json({
+            success: true,
+            data: {
+                totalUsers,
+                activeUsers,
+                totalTests,
+                usersByRole: roleStats,
+                testStats
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching overview stats:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`🚀 DISC Bot server running on port ${PORT}`);
     console.log(`📱 Telegram Bot Token: ${process.env.TELEGRAM_BOT_TOKEN ? '✅ Set' : '❌ Missing'}`);
     console.log(`📺 Channel ID: ${process.env.TELEGRAM_CHANNEL_ID ? '✅ Set' : '❌ Missing'}`);
     console.log(`🌐 Main page: index.html with test overview`);
+    console.log(`🗄️ Database: SQLite connected`);
 });
