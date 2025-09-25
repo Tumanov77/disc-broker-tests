@@ -552,7 +552,11 @@
             
             if (isLoggedIn && candidateData) {
                 const userData = JSON.parse(candidateData);
-                document.getElementById('userName').textContent = userData.fullName;
+                // Убираем отчество из имени
+                const nameParts = userData.fullName.split(' ');
+                const displayName = nameParts.length > 1 ? `${nameParts[0]} ${nameParts[1]}` : userData.fullName;
+                
+                document.getElementById('userName').textContent = displayName;
                 document.getElementById('userTelegram').textContent = userData.telegram;
                 document.getElementById('userInfo').style.display = 'flex';
                 
