@@ -298,10 +298,15 @@
     <script>
         // Проверка авторизации при загрузке страницы
         document.addEventListener('DOMContentLoaded', function() {
-            // Проверяем авторизацию
-            if (sessionStorage.getItem('adminAuth') !== 'true') {
-                window.location.href = '/admin-login.html';
-                return;
+        // Проверяем авторизацию
+        if (sessionStorage.getItem('adminAuth') !== 'true') {
+            window.location.href = '/admin-login.html';
+            return;
+        }
+        
+        // Перенаправляем на простую админку
+        window.location.href = '/admin-simple.html';
+        return;
             }
             
             // Устанавливаем отметку времени
