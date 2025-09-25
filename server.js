@@ -313,19 +313,31 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/public/index.html');
 });
 
-// Serve the DISC test form
+// Serve general tests
+app.get('/general/disc-test.html', (req, res) => {
+    res.sendFile(__dirname + '/public/general/disc-test.html');
+});
+
+app.get('/general/eq-test.html', (req, res) => {
+    res.sendFile(__dirname + '/public/general/eq-test.html');
+});
+
+// Serve broker tests
+app.get('/broker/spq-test.html', (req, res) => {
+    res.sendFile(__dirname + '/public/broker/spq-test.html');
+});
+
+// Legacy routes for backward compatibility
 app.get('/disc-test.html', (req, res) => {
-    res.sendFile(__dirname + '/public/disc-test.html');
+    res.redirect('/general/disc-test.html');
 });
 
-// Serve the EQ test form
 app.get('/test2', (req, res) => {
-    res.sendFile(__dirname + '/public/test2.html');
+    res.redirect('/general/eq-test.html');
 });
 
-// Serve the SPQ test form
 app.get('/test3', (req, res) => {
-    res.sendFile(__dirname + '/public/test3.html');
+    res.redirect('/broker/spq-test.html');
 });
 
 app.listen(PORT, () => {
