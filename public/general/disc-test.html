@@ -818,14 +818,21 @@
                 document.getElementById('loading').classList.remove('show');
                 
                 if (result.success) {
-                    // Обновляем прогресс
-                    updateTestProgress(1);
+                    // Обновляем прогресс для test1 (DISC)
+                    const progress = JSON.parse(localStorage.getItem('testProgress') || '{}');
+                    progress.test1Completed = true;
+                    localStorage.setItem('testProgress', JSON.stringify(progress));
                     
                     // Показываем успешное сообщение
                     document.getElementById('successMessage').classList.add('show');
                     
                     // Скроллим к сообщению
                     document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+                    
+                    // Перенаправляем на страницу этапов через 3 секунды
+                    setTimeout(() => {
+                        window.location.href = '/entry.html';
+                    }, 3000);
                 } else {
                     // Показываем ошибку
                     document.getElementById('errorMessage').classList.add('show');
@@ -844,7 +851,7 @@
             const timestampElement = document.getElementById('update-timestamp');
             if (timestampElement) {
                 // Статичная дата последнего обновления на сервере
-                timestampElement.textContent = `Обновлено: 26.09.2025, 04:24:19`;
+                timestampElement.textContent = `Обновлено: 26.09.2025, 03:15:00`;
             }
         });
     </script>

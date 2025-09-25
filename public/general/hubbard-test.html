@@ -680,6 +680,11 @@
                     document.getElementById('loading').style.display = 'none';
                     document.getElementById('successMessage').style.display = 'block';
                     document.getElementById('hubbardForm').style.display = 'none';
+                    
+                    // Перенаправляем на страницу этапов через 3 секунды
+                    setTimeout(() => {
+                        window.location.href = '/entry.html';
+                    }, 3000);
                 } else {
                     throw new Error(result.error || 'Ошибка сервера');
                 }
@@ -737,7 +742,7 @@
             const timestampElement = document.getElementById('update-timestamp');
             if (timestampElement) {
                 // Статичная дата последнего обновления на сервере
-                timestampElement.textContent = `Обновлено: 26.09.2025, 04:24:19`;
+                timestampElement.textContent = `Обновлено: 26.09.2025, 03:15:00`;
             }
         });
     </script>
