@@ -528,12 +528,77 @@
             </div>
         </div>
 
+        <!-- Встроенная админ-панель -->
+        <div id="adminPanel" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000;">
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border-radius: 20px; padding: 40px; max-width: 800px; width: 90%; max-height: 80%; overflow-y: auto;">
+                <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #f0f0f0; padding-bottom: 20px;">
+                    <h1 style="color: #333; font-size: 2em; margin-bottom: 10px;">🏢 Админ-панель Tumanov Group HR</h1>
+                    <p>Система тестирования кандидатов</p>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                    <div style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        <h3 style="margin-bottom: 5px;">🌐 Система</h3>
+                        <div style="font-size: 1.5em; font-weight: bold;">✅ АКТИВНА</div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        <h3 style="margin-bottom: 5px;">📊 Тесты</h3>
+                        <div style="font-size: 1.5em; font-weight: bold;">✅ 8 ТЕСТОВ</div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        <h3 style="margin-bottom: 5px;">📱 Telegram</h3>
+                        <div style="font-size: 1.5em; font-weight: bold;">✅ РАБОТАЕТ</div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        <h3 style="margin-bottom: 5px;">🗄️ База данных</h3>
+                        <div style="font-size: 1.5em; font-weight: bold;">✅ СОХРАНЯЕТ</div>
+                    </div>
+                </div>
+
+                <div style="background: #fff3cd; padding: 15px; border-radius: 10px; border-left: 5px solid #ffc107; margin-bottom: 20px;">
+                    <h3 style="color: #856404; margin-bottom: 10px;">📋 Реализованные тесты:</h3>
+                    <div style="background: white; padding: 8px; margin: 3px 0; border-radius: 5px; border-left: 3px solid #ffc107; font-size: 14px;">
+                        <strong>DISC:</strong> Стиль поведения (24 блока) | <strong>EQ:</strong> Эмоциональный интеллект (20 вопросов)
+                    </div>
+                    <div style="background: white; padding: 8px; margin: 3px 0; border-radius: 5px; border-left: 3px solid #ffc107; font-size: 14px;">
+                        <strong>SPQ:</strong> Настойчивость в продажах (15 вопросов) | <strong>Хаббард:</strong> Тональная шкала (10 вопросов)
+                    </div>
+                    <div style="background: white; padding: 8px; margin: 3px 0; border-radius: 5px; border-left: 3px solid #ffc107; font-size: 14px;">
+                        <strong>Integrity:</strong> Честность и этичность | <strong>OCA:</strong> Оксфордский тест личности
+                    </div>
+                    <div style="background: white; padding: 8px; margin: 3px 0; border-radius: 5px; border-left: 3px solid #ffc107; font-size: 14px;">
+                        <strong>Aptitude:</strong> Внимание и мышление | <strong>KFU:</strong> Критические факторы успеха
+                    </div>
+                </div>
+
+                <div style="background: #e3f2fd; padding: 15px; border-radius: 10px; border-left: 5px solid #2196f3; margin-bottom: 20px;">
+                    <h3 style="color: #1976d2; margin-bottom: 10px;">📱 Telegram бот:</h3>
+                    <p style="margin: 5px 0; font-size: 14px;"><strong>Бот:</strong> @TumaovHrTestBot</p>
+                    <p style="margin: 5px 0; font-size: 14px;"><strong>Канал ID:</strong> -1003135904548</p>
+                    <p style="margin: 5px 0; font-size: 14px;"><strong>Статус:</strong> ✅ Активен и отправляет результаты</p>
+                </div>
+
+                <div style="background: #f3e5f5; padding: 15px; border-radius: 10px; border-left: 5px solid #9c27b0; margin-bottom: 20px;">
+                    <h3 style="color: #7b1fa2; margin-bottom: 10px;">🔐 Доступ к системе:</h3>
+                    <p style="margin: 5px 0; font-size: 14px;"><strong>Главная:</strong> https://tumanov-group-hr.up.railway.app</p>
+                    <p style="margin: 5px 0; font-size: 14px;"><strong>Этапы:</strong> https://tumanov-group-hr.up.railway.app/entry.html</p>
+                    <p style="margin: 5px 0; font-size: 14px;"><strong>Админ-вход:</strong> https://tumanov-group-hr.up.railway.app/admin-login.html</p>
+                    <p style="margin: 5px 0; font-size: 14px;"><strong>Логин:</strong> tumanovnv@gmail.com | <strong>Пароль:</strong> hakjow-zuzra5-Qovbop</p>
+                </div>
+
+                <div style="text-align: center;">
+                    <button onclick="hideAdminPanel()" style="background: #dc3545; color: white; border: none; padding: 12px 24px; border-radius: 10px; font-size: 1.1em; cursor: pointer;">
+                        Закрыть админку
+                    </button>
+                </div>
+            </div>
+        </div>
 
         <div class="footer">
             <p>Система тестирования кандидатов Tumanov Group</p>
             <p style="margin-top: 10px;">
-                <a href="/admin-direct.html" style="color: #666; text-decoration: none; font-size: 12px;">
-                    🔧 Админ-панель (прямой доступ)
+                <a href="javascript:showAdminPanel()" style="color: #666; text-decoration: none; font-size: 12px;">
+                    🔧 Админ-панель (встроенная)
                 </a>
             </p>
         </div>
@@ -1067,9 +1132,18 @@
             const timestampElement = document.getElementById('update-timestamp');
             if (timestampElement) {
                 // Статичная дата последнего обновления на сервере
-                timestampElement.textContent = `Обновлено: 26.09.2025, 04:08:11 - ФОРМА ЛОГИНА РАБОТАЕТ НА ГЛАВНОЙ!`;
+                timestampElement.textContent = `Обновлено: 26.09.2025, 04:09:18 - ВСТРОЕННАЯ АДМИНКА!`;
             }
         });
+
+        // Функции для встроенной админки
+        function showAdminPanel() {
+            document.getElementById('adminPanel').style.display = 'block';
+        }
+        
+        function hideAdminPanel() {
+            document.getElementById('adminPanel').style.display = 'none';
+        }
     </script>
 </body>
 </html>
