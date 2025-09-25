@@ -46,6 +46,36 @@
             font-size: 16px;
         }
 
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .user-data {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+        }
+
         .form-section {
             margin-bottom: 30px;
             padding: 20px;
@@ -221,23 +251,17 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Тест 2</h1>
+            <div class="user-info" id="userInfo" style="display: none;">
+                <div class="user-data">
+                    <span id="userName"></span> (<span id="userTelegram"></span>)
+                </div>
+                <button class="logout-btn" onclick="logout()">Выйти</button>
+            </div>
+            <h1>Тест 3</h1>
             <p>Общее тестирование</p>
         </div>
 
         <form id="eqForm">
-            <!--  -->
-            <div class="form-section">
-                <h3></h3>
-                <div class="form-group">
-                    <label for="name">Имя и фамилия *</label>
-                    <input type="text" id="name" name="name" required>
-                </div>
-                <div class="form-group">
-                    <label for="telegram">Телеграм ник *</label>
-                    <input type="text" id="telegram" name="telegram" required placeholder="@username">
-                </div>
-            </div>
 
             <!-- Инструкции -->
             <div class="instructions">
@@ -275,6 +299,39 @@
     </div>
 
     <script>
+        // Проверка логина при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginStatus();
+        });
+
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const candidateData = localStorage.getItem('candidateData');
+            
+            if (isLoggedIn && candidateData) {
+                const userData = JSON.parse(candidateData);
+                document.getElementById('userName').textContent = userData.fullName;
+                document.getElementById('userTelegram').textContent = userData.telegram;
+                document.getElementById('userInfo').style.display = 'flex';
+            } else {
+                // Перенаправить на страницу входа
+                window.location.href = '/entry.html';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('candidateData');
+            localStorage.removeItem('testProgress');
+            window.location.href = '/entry.html';
+        }
+
+        function updateTestProgress(stageNumber) {
+            const progress = JSON.parse(localStorage.getItem('testProgress') || '{}');
+            progress[`test${stageNumber}Completed`] = true;
+            localStorage.setItem('testProgress', JSON.stringify(progress));
+        }
+
         const eqQuestions = [
             {
                 question: "Клиент раздражён и говорит: «Вы предлагаете ерунду!»",
@@ -539,11 +596,11 @@
                 e.preventDefault();
                 
                 // Проверяем заполнение личной информации
-                const name = document.getElementById('name').value.trim();
-                const telegram = document.getElementById('telegram').value.trim();
-                
-                if (!name || !telegram) {
-                    alert('Пожалуйста, заполните все поля личной информации.');
+                // Получаем данные из localStorage
+                const candidateData = JSON.parse(localStorage.getItem('candidateData'));
+                if (!candidateData) {
+                    alert('Ошибка: данные пользователя не найдены. Пожалуйста, войдите заново.');
+                    window.location.href = '/entry.html';
                     return;
                 }
                 
@@ -571,20 +628,23 @@
                 document.getElementById('errorMessage').classList.remove('show');
                 
                 // Подготавливаем данные
-                const candidateData = {
-                    name: name,
-                    telegram: telegram,
+                const testData = {
+                    name: candidateData.fullName,
+                    telegram: candidateData.telegram,
                     score: score,
                     analysis: analysis
                 };
                 
                 // Отправляем данные
-                const result = await submitResults(candidateData);
+                const result = await submitResults(testData);
                 
                 // Скрываем загрузку
                 document.getElementById('loading').classList.remove('show');
                 
                 if (result.success) {
+                    // Обновляем прогресс
+                    updateTestProgress(3);
+                    
                     // Показываем успешное сообщение
                     document.getElementById('successMessage').classList.add('show');
                     
