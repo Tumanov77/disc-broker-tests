@@ -690,13 +690,15 @@
                     </div>
                 `;
             } else if (role === 'other') {
+                // Для "другая должность" показываем все доступные профильные тесты
                 roleTestsContainer.innerHTML = `
-                    <div class="test-card disabled">
-                        <h4>🔧 Тесты для других должностей</h4>
-                        <div class="test-details">
-                            Время прохождения: 20-35 минут
-                        </div>
-                        <div class="test-status">Скоро будет доступно</div>
+                    <div class="test-card" onclick="checkAuthAndGo('/b1')">
+                        <h4>🏠 Тест 7 - настойчивость в продажах <span class="time-info">(8-12 мин)</span></h4>
+                        <a href="javascript:void(0)" class="test-link" onclick="checkAuthAndGo('/b1')">Начать тест</a>
+                    </div>
+                    <div class="test-card" onclick="checkAuthAndGo('/kfu')">
+                        <h4>👔 КФУ - Критические факторы успеха <span class="time-info">(5-7 мин)</span></h4>
+                        <a href="javascript:void(0)" class="test-link" onclick="checkAuthAndGo('/kfu')">Начать проверку КФУ</a>
                     </div>
                 `;
             }
