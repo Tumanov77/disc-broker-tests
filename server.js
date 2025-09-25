@@ -2,7 +2,21 @@ const express = require('express');
 const TelegramBot = require('node-telegram-bot-api');
 const cors = require('cors');
 require('dotenv').config();
-const { User, TestResult, Session } = require('./database');
+// Подключение к базе данных с обработкой ошибок
+let User, TestResult, Session;
+try {
+    const db = require('./database');
+    User = db.User;
+    TestResult = db.TestResult;
+    Session = db.Session;
+    console.log('✅ База данных подключена успешно');
+} catch (error) {
+    console.error('❌ Ошибка подключения к базе данных:', error);
+    // Создаем заглушки для работы без базы данных
+    User = { create: () => ({ id: 1 }), findById: () => null };
+    TestResult = { save: () => ({ id: 1 }), findByUserId: () => [] };
+    Session = { create: () => null, findByUserId: () => null };
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
