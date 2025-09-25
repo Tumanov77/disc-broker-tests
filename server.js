@@ -862,19 +862,19 @@ app.get('/t2', (req, res) => {
 });
 
 app.get('/t3', (req, res) => {
-    res.sendFile(__dirname + '/public/general/oca-test.html');
-});
-
-app.get('/t4', (req, res) => {
     res.sendFile(__dirname + '/public/general/eq-test.html');
 });
 
-app.get('/t5', (req, res) => {
+app.get('/t4', (req, res) => {
     res.sendFile(__dirname + '/public/general/aptitude-test.html');
 });
 
-app.get('/t6', (req, res) => {
+app.get('/t5', (req, res) => {
     res.sendFile(__dirname + '/public/general/integrity-test.html');
+});
+
+app.get('/t6', (req, res) => {
+    res.sendFile(__dirname + '/public/general/oca-test.html');
 });
 
 app.get('/b1', (req, res) => {
