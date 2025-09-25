@@ -1002,11 +1002,11 @@
             console.log('candidateData:', candidateData);
             
             // Если пользователь не авторизован, перенаправляем на главную
-            if (isLoggedIn !== 'true' || !candidateData || candidateData.trim() === '') {
+            // if (isLoggedIn !== 'true' || !candidateData || candidateData.trim() === '') {
                 console.log('User not logged in, redirecting to main page');
                 
                 
-                window.location.href = '/';
+                // window.location.href = '/';
                 return;
             }
             
@@ -1016,7 +1016,7 @@
                     console.log('Incomplete user data, redirecting to main page');
                     
                     
-                    window.location.href = '/';
+                    // window.location.href = '/';
                     return;
                 }
                 console.log('User is authorized:', userData.fullName);
@@ -1024,7 +1024,7 @@
                 console.error('Error parsing user data:', error);
                 
                 
-                window.location.href = '/';
+                // window.location.href = '/';
                 return;
             }
             
