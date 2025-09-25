@@ -598,7 +598,7 @@
             <p>Система тестирования кандидатов Tumanov Group</p>
             <p style="margin-top: 10px;">
                 <a href="javascript:showAdminPanel()" style="color: #666; text-decoration: none; font-size: 12px;">
-                    🔧 Админ-панель (встроенная)
+                    🔧 Админ-панель (требует пароль)
                 </a>
             </p>
         </div>
@@ -1132,13 +1132,18 @@
             const timestampElement = document.getElementById('update-timestamp');
             if (timestampElement) {
                 // Статичная дата последнего обновления на сервере
-                timestampElement.textContent = `Обновлено: 26.09.2025, 04:09:18 - ВСТРОЕННАЯ АДМИНКА!`;
+                timestampElement.textContent = `Обновлено: 26.09.2025, 04:10:14 - ЗАЩИЩЕННАЯ АДМИНКА!`;
             }
         });
 
-        // Функции для встроенной админки
+        // Функции для встроенной админки с защитой
         function showAdminPanel() {
-            document.getElementById('adminPanel').style.display = 'block';
+            const password = prompt('🔐 Введите пароль для доступа к админ-панели:');
+            if (password === 'hakjow-zuzra5-Qovbop') {
+                document.getElementById('adminPanel').style.display = 'block';
+            } else if (password !== null) {
+                alert('❌ Неверный пароль! Доступ запрещен.');
+            }
         }
         
         function hideAdminPanel() {
