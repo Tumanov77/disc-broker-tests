@@ -555,7 +555,7 @@
                 const userData = JSON.parse(candidateData);
                 
                 // Проверить, не был ли кандидат отсеян по КФУ
-                if (userData.role === 'manager' && progress.kfuCompleted && !progress.kfuPassed) {
+                if (userData.role === 'sales_manager' && progress.kfuCompleted && !progress.kfuPassed) {
                     // Показать сообщение об отсеивании и перенаправить
                     alert('Вы не прошли проверку критических факторов успеха для данной должности. Тестирование завершается.');
                     logout();
@@ -578,6 +578,22 @@
             }
         }
 
+        function getRoleDisplayName(role) {
+            const roleNames = {
+                'sales_manager': 'Руководителя отдела продаж',
+                'marketing_manager': 'Руководителя отдела маркетинга',
+                'marketing_analyst': 'Маркетолога-аналитика',
+                'financial_director': 'Финансового директора',
+                'operational_manager': 'Операционного менеджера',
+                'operational_director': 'Операционного директора',
+                'assistant': 'Ассистента руководителя',
+                'designer': 'Дизайнера',
+                'commercial_director': 'Коммерческого директора',
+                'general_director': 'Генерального директора'
+            };
+            return roleNames[role] || 'специалиста';
+        }
+
         function showRoleSpecificTests(role) {
             const roleTestsContainer = document.getElementById('roleTestsContainer');
             const progress = JSON.parse(localStorage.getItem('testProgress') || '{}');
@@ -589,11 +605,23 @@
                         <a href="/b1" class="test-link">Начать тест</a>
                     </div>
                 `;
-            } else if (role === 'manager') {
+            } else if (role === 'sales_manager') {
                 roleTestsContainer.innerHTML = `
                     <div class="test-card" onclick="window.location.href='/kfu'">
                         <h4>👔 КФУ - Критические факторы успеха <span class="time-info">(5-7 мин)</span></h4>
                         <a href="/kfu" class="test-link">Начать проверку КФУ</a>
+                    </div>
+                `;
+            } else if (role === 'marketing_manager' || role === 'marketing_analyst' || role === 'financial_director' || 
+                       role === 'operational_manager' || role === 'operational_director' || role === 'assistant' || 
+                       role === 'designer' || role === 'commercial_director' || role === 'general_director') {
+                roleTestsContainer.innerHTML = `
+                    <div class="test-card disabled">
+                        <h4>🎯 Профильные тесты для ${getRoleDisplayName(role)}</h4>
+                        <div class="test-details">
+                            Время прохождения: 20-40 минут
+                        </div>
+                        <div class="test-status">В разработке</div>
                     </div>
                 `;
             } else if (role === 'backoffice') {
@@ -669,7 +697,7 @@
                 const candidateData = JSON.parse(localStorage.getItem('candidateData') || '{}');
                 const role = candidateData.role;
                 
-                if (role === 'broker' || role === 'manager') {
+                if (role === 'broker' || role === 'sales_manager') {
                     document.getElementById('unlockRoleTests').style.display = 'block';
                 } else {
                     // Для ролей без тестов сразу показать финальный этап
@@ -690,14 +718,13 @@
             let roleTests = [];
             if (role === 'broker') {
                 roleTests = ['test7']; // SPQ для брокеров
-            } else if (role === 'manager') {
-                roleTests = ['kfu']; // КФУ для руководителей
-            } else if (role === 'backoffice') {
-                roleTests = []; // Пока нет тестов для бэкофиса
-            } else if (role === 'marketing') {
-                roleTests = []; // Пока нет тестов для маркетинга
-            } else if (role === 'other') {
-                roleTests = []; // Пока нет тестов для других должностей
+            } else if (role === 'sales_manager') {
+                roleTests = ['kfu']; // КФУ для руководителей отдела продаж
+            } else if (role === 'marketing_manager' || role === 'marketing_analyst' || role === 'financial_director' || 
+                       role === 'operational_manager' || role === 'operational_director' || role === 'assistant' || 
+                       role === 'designer' || role === 'commercial_director' || role === 'general_director' ||
+                       role === 'backoffice' || role === 'other') {
+                roleTests = []; // Пока нет тестов для этих должностей
             }
             
             const completedRoleTests = roleTests.filter(test => progress[test + 'Completed']);

@@ -411,6 +411,28 @@
                     </div>
                 </div>
 
+                <div class="question-block">
+                    <h4>С какой системой вы работали для управления продажами и командой?</h4>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q8_a" name="question8" value="a" required>
+                            <label for="q8_a">Только Excel / Google Sheets, без CRM</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q8_b" name="question8" value="b">
+                            <label for="q8_b">Bitrix24, Salesforce или другие CRM, но не AmoCRM</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q8_c" name="question8" value="c">
+                            <label for="q8_c">AmoCRM — настройка воронок, распределение лидов, отчёты по брокерам</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q8_d" name="question8" value="d">
+                            <label for="q8_d">В AmoCRM не работал, но я быстро учусь и разберусь</label>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="submit-section">
                     <button type="submit" class="submit-btn" id="submitBtn">
                         Завершить проверку КФУ
@@ -509,7 +531,8 @@
                 question4: formData.get('question4'),
                 question5: formData.get('question5'),
                 question6: formData.get('question6'),
-                question7: formData.get('question7')
+                question7: formData.get('question7'),
+                question8: formData.get('question8')
             };
             
             // Проверить КФУ (правильные ответы)
@@ -520,7 +543,8 @@
                 question4: 'b', // Конверсия по воронке
                 question5: 'b', // Мотивация и развитие команды
                 question6: 'b', // Обучение и контроль
-                question7: 'b'  // Опыт в недвижимости премиум/инвест
+                question7: 'b', // Опыт в недвижимости премиум/инвест
+                question8: 'c'  // Опыт работы с AmoCRM
             };
             
             let passed = 0;
@@ -545,8 +569,8 @@
                 }
             });
             
-            // Определить результат (нужно пройти минимум 5 из 7 вопросов)
-            const kfuPassed = passed >= 5;
+            // Определить результат (нужно пройти минимум 6 из 8 вопросов)
+            const kfuPassed = passed >= 6;
             
             // Показать загрузку
             document.getElementById('loading').classList.add('show');

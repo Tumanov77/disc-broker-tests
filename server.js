@@ -1001,6 +1001,7 @@ function formatKFUTelegramMessage(data) {
 5. Приоритетная задача: ${data.answers.question5}
 6. Работа со слабыми: ${data.answers.question6}
 7. Релевантный опыт: ${data.answers.question7}
+8. Работа с CRM: ${data.answers.question8}
 
 ⏰ **Время:** ${new Date(data.timestamp).toLocaleString('ru-RU')}`;
 }
