@@ -156,6 +156,40 @@ function formatSPQTelegramMessage(candidateData) {
     return message;
 }
 
+// Format Hubbard test message for Telegram
+function formatHubbardTelegramMessage(candidateData) {
+    const { name, telegram, position, score, averageTone, analysis } = candidateData;
+
+    let message = `📈 *НОВЫЙ КАНДИДАТ - ТЕСТ 5 → Тональная шкала Хаббарда*\n`;
+    message += `🎯 *Общие тесты для всех должностей*\n\n`;
+    message += `👤 *Кандидат:* ${name}\n`;
+    message += `📱 *Telegram:* @${telegram.replace('@', '')}\n`;
+    message += `📅 *Дата:* ${new Date().toLocaleString('ru-RU')}\n\n`;
+
+    message += `📊 *РЕЗУЛЬТАТЫ ТЕСТА 5:*\n`;
+    message += `🎯 *Общий балл:* ${score}/40\n`;
+    message += `📈 *Средний тон:* ${averageTone}\n`;
+    message += `💡 *Уровень:* ${analysis.level}\n`;
+    message += `🔍 *Описание:* ${analysis.description}\n`;
+    message += `✅ *Рекомендация:* ${analysis.recommendation}\n\n`;
+
+    // Анализ тона
+    if (parseFloat(averageTone) >= 3.0) {
+        message += `🟢 *ЖИВОЙ ТОН!* Кандидат продуктивный, энергичный и адекватный.\n`;
+        message += `✅ *Подходит для работы* - высокий эмоциональный уровень.\n\n`;
+    } else if (parseFloat(averageTone) >= 2.0) {
+        message += `🟡 *СТАБИЛЬНЫЙ ТОН* - есть потенциал для развития.\n`;
+        message += `⚠️ *Требует внимания* - может потребоваться дополнительная оценка.\n\n`;
+    } else {
+        message += `🔴 *НИЗКИЙ ТОН* - реактивный, источник хаоса.\n`;
+        message += `❌ *НЕ РЕКОМЕНДУЕТСЯ* - может создавать проблемы в команде.\n\n`;
+    }
+
+    message += `🔗 *Следующие шаги:* Связаться с HR @LyubovTarasova11`;
+
+    return message;
+}
+
 // API endpoint to receive DISC test results
 app.post('/api/submit-disc', async (req, res) => {
     try {
@@ -303,6 +337,55 @@ app.post('/api/submit-spq', async (req, res) => {
     }
 });
 
+// API endpoint to receive Hubbard test results
+app.post('/api/submit-hubbard', async (req, res) => {
+    try {
+        const { name, telegram, score, averageTone, analysis } = req.body;
+
+        // Validate data
+        if (!name || !telegram || score === undefined || !analysis) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+
+        // Prepare candidate data
+        const candidateData = {
+            name,
+            telegram,
+            position: 'общие тесты', // General test
+            score,
+            averageTone,
+            analysis,
+            timestamp: new Date().toISOString()
+        };
+
+        // Send to Telegram channel
+        const message = formatHubbardTelegramMessage(candidateData);
+
+        try {
+            await bot.sendMessage(CHANNEL_ID, message, {
+                parse_mode: 'Markdown',
+                disable_web_page_preview: true
+            });
+        } catch (telegramError) {
+            console.error('Telegram error:', telegramError);
+            // Continue even if Telegram fails
+        }
+
+        // Log to console for debugging
+        console.log('Hubbard test submitted:', candidateData);
+
+        res.json({
+            success: true,
+            message: 'Результаты отправлены в Telegram канал',
+            analysis: analysis
+        });
+
+    } catch (error) {
+        console.error('Error processing Hubbard test:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
     res.json({ status: 'OK', timestamp: new Date().toISOString() });
@@ -320,6 +403,10 @@ app.get('/general/disc-test.html', (req, res) => {
 
 app.get('/general/eq-test.html', (req, res) => {
     res.sendFile(__dirname + '/public/general/eq-test.html');
+});
+
+app.get('/general/hubbard-test.html', (req, res) => {
+    res.sendFile(__dirname + '/public/general/hubbard-test.html');
 });
 
 // Serve broker tests
