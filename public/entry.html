@@ -550,7 +550,7 @@
                 console.log('Found isLoggedIn=true but no candidateData, clearing all data');
                 localStorage.clear();
                 sessionStorage.clear();
-                window.location.href = '/entry.html';
+                window.location.href = '/';
                 return;
             }
             
@@ -559,7 +559,7 @@
                 console.log('Found candidateData but no isLoggedIn flag, clearing all data');
                 localStorage.clear();
                 sessionStorage.clear();
-                window.location.href = '/entry.html';
+                window.location.href = '/';
                 return;
             }
             
@@ -614,7 +614,7 @@
                         console.log('Incomplete or empty user data, clearing and redirecting');
                         localStorage.clear();
                         sessionStorage.clear();
-                        window.location.href = '/entry.html';
+                        window.location.href = '/';
                         return;
                     }
                     
@@ -654,14 +654,14 @@
                     // Если данные повреждены, очистить и перенаправить на вход
                     localStorage.clear();
                     sessionStorage.clear();
-                    window.location.href = '/entry.html';
+                    window.location.href = '/';
                 }
             } else {
                 // Если нет данных логина, перенаправить на страницу входа
                 console.log('No valid login data found, redirecting to login');
                 localStorage.clear();
                 sessionStorage.clear();
-                window.location.href = '/entry.html';
+                window.location.href = '/';
             }
         }
 
@@ -749,7 +749,7 @@
         function logout() {
             console.log('Logout called');
             localStorage.clear(); // Очищаем все данные
-            window.location.href = '/entry.html';
+            window.location.href = '/';
         }
 
         function clearAllData() {
@@ -805,7 +805,7 @@
             
             console.log('User not logged in or invalid data, redirecting to login');
             localStorage.clear(); // Очищаем поврежденные данные
-            window.location.href = '/entry.html';
+            window.location.href = '/';
         }
 
         function loadProgress() {
@@ -1062,7 +1062,7 @@
             const timestampElement = document.getElementById('update-timestamp');
             if (timestampElement) {
                 // Статичная дата последнего обновления на сервере
-                timestampElement.textContent = `Последнее обновление: 26.09.2025, 04:29:24`;
+                timestampElement.textContent = `Последнее обновление: 26.09.2025, 04:30:39`;
             }
         });
     </script>
