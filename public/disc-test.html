@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DISC-тест для кандидатов</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #6c757d;
+            font-size: 16px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            background: #f8f9fa;
+        }
+
+        .form-section h3 {
+            color: #495057;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ced4da;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.15s ease-in-out;
+        }
+
+        .form-group input[type="text"]:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+        }
+
+        .instructions {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .instructions h3 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+
+        .instructions p {
+            margin-bottom: 8px;
+        }
+
+        .block {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+        }
+
+        .block h4 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .statement {
+            margin-bottom: 12px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            border: 1px solid #e9ecef;
+        }
+
+        .statement label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .statement input[type="radio"] {
+            margin-right: 12px;
+            transform: scale(1.2);
+        }
+
+        .submit-btn {
+            background: #28a745;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 30px;
+            transition: background-color 0.15s ease-in-out;
+        }
+
+        .submit-btn:hover {
+            background: #218838;
+        }
+
+        .submit-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            background: #e3f2fd;
+            border-radius: 6px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .success-message {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .success-message h3 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+
+        .success-message p {
+            color: #155724;
+            margin-bottom: 8px;
+        }
+
+        .error-message {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 6px;
+            color: #721c24;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .results {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 6px;
+        }
+
+        .results h3 {
+            color: #155724;
+            margin-bottom: 15px;
+        }
+
+        .score-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .score-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 6px;
+            border: 2px solid #e9ecef;
+        }
+
+        .score-item.dominant { border-color: #dc3545; }
+        .score-item.influencer { border-color: #fd7e14; }
+        .score-item.stable { border-color: #20c997; }
+        .score-item.conscientious { border-color: #6f42c1; }
+
+        .score-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .score-label {
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .assessment {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+        }
+
+        .assessment h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .assessment p {
+            color: #856404;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            
+            .score-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Тест 1</h1>
+            <p>🏠 Тест для брокеров по продажам недвижимости</p>
+        </div>
+
+        <form id="discForm">
+            <!-- Личная информация -->
+            <div class="form-section">
+                <h3>Личная информация</h3>
+                <div class="form-group">
+                    <label for="name">Имя и фамилия *</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="telegram">Телеграм ник *</label>
+                    <input type="text" id="telegram" name="telegram" required placeholder="@username">
+                </div>
+            </div>
+
+            <!-- Инструкции -->
+            <div class="instructions">
+                <h3>📋 Инструкция для кандидата</h3>
+                <p>В каждом блоке выберите:</p>
+                <p>✔ <strong>утверждение, которое наиболее похоже на вас</strong></p>
+                <p>✖ <strong>утверждение, которое наименее похоже на вас</strong></p>
+                <p><em>Обратите внимание: в каждом блоке нужно выбрать ОДНО утверждение как "наиболее похоже" и ОДНО как "наименее похоже".</em></p>
+            </div>
+
+            <!-- Блоки теста -->
+            <div id="testBlocks"></div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                Завершить тест и отправить результаты
+            </button>
+        </form>
+
+        <div id="loading" class="loading">
+            <h3>⏳ Отправка результатов...</h3>
+            <p>Пожалуйста, подождите, мы обрабатываем ваши ответы</p>
+        </div>
+
+        <div id="successMessage" class="success-message">
+            <h3>✅ Тест 1 завершен!</h3>
+            <p>Результаты отправлены в HR отдел</p>
+            <p>Теперь заполните Тест 2</p>
+            <button onclick="window.location.href='/test2'" style="margin-top: 15px; padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">
+                Перейти к Тесту 2
+            </button>
+        </div>
+
+        <div id="errorMessage" class="error-message">
+            <h3>❌ Ошибка при отправке</h3>
+            <p>Попробуйте еще раз или свяжитесь с нами напрямую</p>
+        </div>
+
+    </div>
+
+    <script>
+        const discBlocks = [
+            {
+                statements: [
+                    { text: "люблю быстро принимать решения", type: "D" },
+                    { text: "предпочитаю, чтобы всё было по правилам", type: "C" },
+                    { text: "легко завожу новые знакомства", type: "I" },
+                    { text: "ценю стабильность и спокойствие", type: "S" }
+                ]
+            },
+            {
+                statements: [
+                    { text: "мне нравится конкурировать и побеждать", type: "D" },
+                    { text: "я обычно внимателен к деталям", type: "C" },
+                    { text: "я вдохновляю других своим энтузиазмом", type: "I" },
+                    { text: "я верен своим привычкам и обязанностям", type: "S" }
+                ]
+            },
+            {
+                statements: [
+                    { text: "люблю рисковать", type: "D" },
+                    { text: "всегда проверяю точность информации", type: "C" },
+                    { text: "люблю быть в центре внимания", type: "I" },
+                    { text: "стараюсь поддерживать гармонию", type: "S" }
+                ]
+            },
+            {
+                statements: [
+                    { text: "стремлюсь контролировать ситуацию", type: "D" },
+                    { text: "ценю точность и порядок", type: "C" },
+                    { text: "умею убеждать людей", type: "I" },
+                    { text: "терпелив и последователен", type: "S" }
+                ]
+            },
+            {
+                statements: [
+                    { text: "решаю задачи максимально быстро", type: "D" },
+                    { text: "предпочитаю сначала анализировать", type: "C" },
+                    { text: "легко вдохновляю клиента", type: "I" },
+                    { text: "надёжен и постоянен", type: "S" }
+                ]
+            },
+            {
+                statements: [
+                    { text: "люблю руководить другими", type: "D" },
+                    { text: "осторожен в действиях", type: "C" },
+                    { text: "оптимист и дружелюбен", type: "I" },
+                    { text: "стабилен и верен друзьям", type: "S" }
+                ]
+            },
+            {
+                statements: [
+                    { text: "целеустремлённый и решительный", type: "D" },
+                    { text: "скрупулёзный и аккуратный", type: "C" },
+                    { text: "эмоциональный и открытый", type: "I" },
+                    { text: "уравновешенный и предсказуемый", type: "S" }
+                ]
+            },
+            {
+                statements: [
+                    { text: "готов брать на себя ответственность", type: "D" },
+                    { text: "предпочитаю структурированность", type: "C" },
+                    { text: "легко завожу разговор", type: "I" },
+                    { text: "избегаю конфликтов", type: "S" }
+                ]
+            },
+            {
+                statements: [
+                    { text: "люблю побеждать", type: "D" },
+                    { text: "люблю планировать наперёд", type: "C" },
+                    { text: "люблю развлекать людей", type: "I" },
+                    { text: "ценю спокойный ритм жизни", type: "S" }
+                ]
+            },
+            {
+                statements: [
+                    { text: "быстро принимаю решения", type: "D" },
+                    { text: "ориентирован на факты", type: "C" },
+                    { text: "люблю быть в центре компании", type: "I" },
+                    { text: "поддерживаю стабильность в отношениях", type: "S" }
+                ]
+            },
+            {
+                statements: [
+                    { text: "проявляю напористость", type: "D" },
+                    { text: "предпочитаю точные инструкции", type: "C" },
+                    { text: "легко заражаю других энтузиазмом", type: "I" },
+                    { text: "постоянен в привычках", type: "S" }
+                ]
+            },
+            {
+                statements: [
+                    { text: "готов спорить ради своей точки зрения", type: "D" },
+                    { text: "люблю порядок и правила", type: "C" },
+                    { text: "дружелюбен и общителен", type: "I" },
+                    { text: "надёжен и преданный", type: "S" }
+                ]
+            },
+            {
+                statements: [
+                    { text: "люблю ставить амбициозные цели", type: "D" },
+                    { text: "люблю исследовать факты", type: "C" },
+                    { text: "люблю быть душой компании", type: "I" },
+                    { text: "ценю предсказуемость", type: "S" }
+                ]
+            },
+            {
+                statements: [
+                    { text: "стараюсь контролировать результат", type: "D" },
+                    { text: "люблю анализировать детали", type: "C" },
+                    { text: "легко нахожу общий язык", type: "I" },
+                    { text: "ценю стабильность", type: "S" }
+                ]
+            },
+            {
+                statements: [
+                    { text: "люблю побеждать во всём", type: "D" },
+                    { text: "люблю точность и аккуратность", type: "C" },
+                    { text: "люблю веселиться с людьми", type: "I" },
+                    { text: "спокоен и уравновешен", type: "S" }
+                ]
+            },
+            {
+                statements: [
+                    { text: "умею влиять на людей", type: "D" },
+                    { text: "следую инструкциям", type: "C" },
+                    { text: "умею создавать настроение", type: "I" },
+                    { text: "верен своим обязанностям", type: "S" }
+                ]
+            },
+            {
+                statements: [
+                    { text: "люблю управлять", type: "D" },
+                    { text: "люблю проверять правильность", type: "C" },
+                    { text: "люблю рассказывать истории", type: "I" },
+                    { text: "люблю помогать другим", type: "S" }
+                ]
+            },
+            {
+                statements: [
+                    { text: "стремлюсь к лидерству", type: "D" },
+                    { text: "люблю точные данные", type: "C" },
+                    { text: "люблю быть общительным", type: "I" },
+                    { text: "предсказуем и надёжен", type: "S" }
+                ]
+            },
+            {
+                statements: [
+                    { text: "люблю влиять на результат", type: "D" },
+                    { text: "люблю следовать правилам", type: "C" },
+                    { text: "люблю вдохновлять других", type: "I" },
+                    { text: "люблю поддерживать гармонию", type: "S" }
+                ]
+            },
+            {
+                statements: [
+                    { text: "быстро реагирую на изменения", type: "D" },
+                    { text: "предпочитаю сначала подумать", type: "C" },
+                    { text: "люблю заводить новые знакомства", type: "I" },
+                    { text: "люблю привычный порядок", type: "S" }
+                ]
+            },
+            {
+                statements: [
+                    { text: "люблю рисковать ради результата", type: "D" },
+                    { text: "люблю проверять всё несколько раз", type: "C" },
+                    { text: "люблю быть душой компании", type: "I" },
+                    { text: "люблю спокойный ритм", type: "S" }
+                ]
+            },
+            {
+                statements: [
+                    { text: "люблю соревноваться", type: "D" },
+                    { text: "люблю системность", type: "C" },
+                    { text: "люблю общение и внимание", type: "I" },
+                    { text: "люблю надёжность и постоянство", type: "S" }
+                ]
+            },
+            {
+                statements: [
+                    { text: "напорист и решителен", type: "D" },
+                    { text: "аккуратен и точен", type: "C" },
+                    { text: "харизматичен и энергичен", type: "I" },
+                    { text: "уравновешен и терпелив", type: "S" }
+                ]
+            },
+            {
+                statements: [
+                    { text: "люблю руководить процессом", type: "D" },
+                    { text: "люблю проверять детали", type: "C" },
+                    { text: "люблю развлекать и общаться", type: "I" },
+                    { text: "люблю спокойствие и порядок", type: "S" }
+                ]
+            }
+        ];
+
+        function createTestBlocks() {
+            const container = document.getElementById('testBlocks');
+            
+            discBlocks.forEach((block, blockIndex) => {
+                const blockDiv = document.createElement('div');
+                blockDiv.className = 'block';
+                
+                const blockTitle = document.createElement('h4');
+                blockTitle.textContent = `Блок ${blockIndex + 1}`;
+                blockDiv.appendChild(blockTitle);
+                
+                // Создаем группу радиокнопок для "наиболее похоже"
+                const mostLikeGroup = document.createElement('div');
+                const mostLikeLabel = document.createElement('p');
+                mostLikeLabel.innerHTML = '<strong>✔ Наиболее похоже на меня:</strong>';
+                mostLikeLabel.style.marginBottom = '10px';
+                mostLikeGroup.appendChild(mostLikeLabel);
+                
+                block.statements.forEach((statement, statementIndex) => {
+                    const statementDiv = document.createElement('div');
+                    statementDiv.className = 'statement';
+                    
+                    const label = document.createElement('label');
+                    
+                    const radio = document.createElement('input');
+                    radio.type = 'radio';
+                    radio.name = `block_${blockIndex}_most`;
+                    radio.value = statement.type;
+                    radio.required = true;
+                    
+                    const text = document.createElement('span');
+                    text.textContent = statement.text;
+                    
+                    label.appendChild(radio);
+                    label.appendChild(text);
+                    statementDiv.appendChild(label);
+                    mostLikeGroup.appendChild(statementDiv);
+                });
+                
+                // Создаем группу радиокнопок для "наименее похоже"
+                const leastLikeGroup = document.createElement('div');
+                const leastLikeLabel = document.createElement('p');
+                leastLikeLabel.innerHTML = '<strong>✖ Наименее похоже на меня:</strong>';
+                leastLikeLabel.style.marginBottom = '10px';
+                leastLikeLabel.style.marginTop = '20px';
+                leastLikeGroup.appendChild(leastLikeLabel);
+                
+                block.statements.forEach((statement, statementIndex) => {
+                    const statementDiv = document.createElement('div');
+                    statementDiv.className = 'statement';
+                    
+                    const label = document.createElement('label');
+                    
+                    const radio = document.createElement('input');
+                    radio.type = 'radio';
+                    radio.name = `block_${blockIndex}_least`;
+                    radio.value = statement.type;
+                    radio.required = true;
+                    
+                    const text = document.createElement('span');
+                    text.textContent = statement.text;
+                    
+                    label.appendChild(radio);
+                    label.appendChild(text);
+                    statementDiv.appendChild(label);
+                    leastLikeGroup.appendChild(statementDiv);
+                });
+                
+                blockDiv.appendChild(mostLikeGroup);
+                blockDiv.appendChild(leastLikeGroup);
+                container.appendChild(blockDiv);
+            });
+        }
+
+        function calculateResults() {
+            const scores = { D: 0, I: 0, S: 0, C: 0 };
+            
+            discBlocks.forEach((block, blockIndex) => {
+                // Получаем выбранные значения
+                const mostLike = document.querySelector(`input[name="block_${blockIndex}_most"]:checked`);
+                const leastLike = document.querySelector(`input[name="block_${blockIndex}_least"]:checked`);
+                
+                if (mostLike && leastLike) {
+                    // Проверяем, что не выбрано одно и то же утверждение
+                    if (mostLike.value === leastLike.value) {
+                        alert(`В блоке ${blockIndex + 1} нельзя выбрать одно и то же утверждение как "наиболее" и "наименее" похожее.`);
+                        return null;
+                    }
+                    
+                    // Добавляем +1 за "наиболее похоже"
+                    scores[mostLike.value]++;
+                    // Вычитаем 1 за "наименее похоже"
+                    scores[leastLike.value]--;
+                }
+            });
+            
+            return scores;
+        }
+
+
+        async function submitResults(candidateData) {
+            try {
+                const response = await fetch('/api/submit-disc', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(candidateData)
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    return { success: true, data: result };
+                } else {
+                    return { success: false, error: result.error || 'Ошибка сервера' };
+                }
+            } catch (error) {
+                return { success: false, error: 'Ошибка сети' };
+            }
+        }
+
+        // Инициализация формы
+        document.addEventListener('DOMContentLoaded', function() {
+            createTestBlocks();
+            
+            document.getElementById('discForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Проверяем заполнение личной информации
+                const name = document.getElementById('name').value.trim();
+                const telegram = document.getElementById('telegram').value.trim();
+                
+                if (!name || !telegram) {
+                    alert('Пожалуйста, заполните все поля личной информации.');
+                    return;
+                }
+                
+                const scores = calculateResults();
+                if (scores === null) return;
+                
+                // Проверяем, что все блоки заполнены
+                const totalBlocks = discBlocks.length;
+                let filledBlocks = 0;
+                
+                for (let i = 0; i < totalBlocks; i++) {
+                    const mostLike = document.querySelector(`input[name="block_${i}_most"]:checked`);
+                    const leastLike = document.querySelector(`input[name="block_${i}_least"]:checked`);
+                    if (mostLike && leastLike) filledBlocks++;
+                }
+                
+                if (filledBlocks < totalBlocks) {
+                    alert(`Пожалуйста, заполните все блоки теста. Заполнено: ${filledBlocks} из ${totalBlocks}`);
+                    return;
+                }
+                
+                // Показываем загрузку
+                document.getElementById('loading').classList.add('show');
+                document.getElementById('submitBtn').disabled = true;
+                document.getElementById('errorMessage').classList.remove('show');
+                
+                // Подготавливаем данные
+                const candidateData = {
+                    name: name,
+                    telegram: telegram,
+                    scores: scores
+                };
+                
+                // Отправляем данные
+                const result = await submitResults(candidateData);
+                
+                // Скрываем загрузку
+                document.getElementById('loading').classList.remove('show');
+                
+                if (result.success) {
+                    // Показываем успешное сообщение
+                    document.getElementById('successMessage').classList.add('show');
+                    
+                    // Скроллим к сообщению
+                    document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    // Показываем ошибку
+                    document.getElementById('errorMessage').classList.add('show');
+                    document.getElementById('errorMessage').scrollIntoView({ behavior: 'smooth' });
+                    document.getElementById('submitBtn').disabled = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

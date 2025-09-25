@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест 3</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #6c757d;
+            font-size: 16px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            background: #f8f9fa;
+        }
+
+        .form-section h3 {
+            color: #495057;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ced4da;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.15s ease-in-out;
+        }
+
+        .form-group input[type="text"]:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+        }
+
+        .instructions {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .instructions h3 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+
+        .instructions p {
+            margin-bottom: 8px;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+        }
+
+        .question h4 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .option {
+            margin-bottom: 12px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            border: 1px solid #e9ecef;
+        }
+
+        .option label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 12px;
+            transform: scale(1.2);
+        }
+
+        .submit-btn {
+            background: #28a745;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 30px;
+            transition: background-color 0.15s ease-in-out;
+        }
+
+        .submit-btn:hover {
+            background: #218838;
+        }
+
+        .submit-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            background: #e3f2fd;
+            border-radius: 6px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .success-message {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .success-message h3 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+
+        .success-message p {
+            color: #155724;
+            margin-bottom: 8px;
+        }
+
+        .error-message {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 6px;
+            color: #721c24;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Тест 3</h1>
+            <p>🏠 Тест для брокеров по продажам недвижимости</p>
+        </div>
+
+        <form id="spqForm">
+            <!-- Личная информация -->
+            <div class="form-section">
+                <h3>Личная информация</h3>
+                <div class="form-group">
+                    <label for="name">Имя и фамилия *</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="telegram">Телеграм ник *</label>
+                    <input type="text" id="telegram" name="telegram" required placeholder="@username">
+                </div>
+            </div>
+
+            <!-- Инструкции -->
+            <div class="instructions">
+                <h3>📋 Инструкция</h3>
+                <p>Выберите тот вариант, который ближе всего к вашим действиям.</p>
+                <p><em>В каждом вопросе выберите ОДИН вариант ответа.</em></p>
+            </div>
+
+            <!-- Вопросы теста -->
+            <div id="testQuestions"></div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                Завершить тест и отправить результаты
+            </button>
+        </form>
+
+        <div id="loading" class="loading">
+            <h3>⏳ Отправка результатов...</h3>
+            <p>Пожалуйста, подождите, мы обрабатываем ваши ответы</p>
+        </div>
+
+        <div id="successMessage" class="success-message">
+            <h3>✅ Все тесты завершены!</h3>
+            <p>Спасибо за прохождение тестирования!</p>
+            <p>HR @LyubovTarasova11 свяжется с вами в ближайшее время</p>
+        </div>
+
+        <div id="errorMessage" class="error-message">
+            <h3>❌ Ошибка при отправке</h3>
+            <p>Попробуйте еще раз или свяжитесь с нами напрямую</p>
+        </div>
+    </div>
+
+    <script>
+        const spqQuestions = [
+            {
+                question: "Клиент сказал «нет». Ваши действия:",
+                options: [
+                    { text: "завершу разговор", value: 0 },
+                    { text: "уточню причину отказа", value: 2 },
+                    { text: "предложу альтернативу", value: 2 }
+                ]
+            },
+            {
+                question: "Вам предстоит 30 холодных звонков.",
+                options: [
+                    { text: "стресс, буду откладывать", value: 0 },
+                    { text: "сделаю планомерно", value: 1 },
+                    { text: "воспринимаю как вызов", value: 2 }
+                ]
+            },
+            {
+                question: "Клиент не ответил 3 раза подряд.",
+                options: [
+                    { text: "перестану звонить", value: 0 },
+                    { text: "попробую позже ещё раз", value: 1 },
+                    { text: "попробую другой способ контакта", value: 2 }
+                ]
+            },
+            {
+                question: "Если сделка сорвалась.",
+                options: [
+                    { text: "сильно расстраиваюсь и теряю мотивацию", value: 0 },
+                    { text: "анализирую причину", value: 2 },
+                    { text: "сразу ищу нового клиента", value: 2 }
+                ]
+            },
+            {
+                question: "Когда слышу отказ.",
+                options: [
+                    { text: "воспринимаю лично", value: 0 },
+                    { text: "сохраняю спокойствие", value: 1 },
+                    { text: "воспринимаю как часть процесса", value: 2 }
+                ]
+            },
+            {
+                question: "Если у меня плохое настроение.",
+                options: [
+                    { text: "откладываю звонки", value: 0 },
+                    { text: "всё равно звоню, но с меньшим энтузиазмом", value: 1 },
+                    { text: "мобилизуюсь и звоню ещё активнее", value: 2 }
+                ]
+            },
+            {
+                question: "Если клиент сказал «подумать».",
+                options: [
+                    { text: "больше не звоню", value: 0 },
+                    { text: "перезваниваю позже", value: 1 },
+                    { text: "назначаю точное время следующего контакта", value: 2 }
+                ]
+            },
+            {
+                question: "Клиент говорит, что выбрал конкурента.",
+                options: [
+                    { text: "прощаюсь", value: 0 },
+                    { text: "уточняю, почему так решил", value: 2 },
+                    { text: "предлагаю сравнить выгоды", value: 2 }
+                ]
+            },
+            {
+                question: "Звонить по холодной базе для меня…",
+                options: [
+                    { text: "мучительно и неприятно", value: 0 },
+                    { text: "часть работы", value: 1 },
+                    { text: "азарт и возможность найти сделку", value: 2 }
+                ]
+            },
+            {
+                question: "Если у меня нет быстрого результата.",
+                options: [
+                    { text: "теряю интерес", value: 0 },
+                    { text: "продолжаю работать, но с меньшей энергией", value: 1 },
+                    { text: "настраиваюсь на долгую игру", value: 2 }
+                ]
+            },
+            {
+                question: "Когда клиент грубит.",
+                options: [
+                    { text: "бросаю трубку", value: 0 },
+                    { text: "стараюсь закончить разговор нейтрально", value: 1 },
+                    { text: "сохраняю спокойствие и перевожу в конструктив", value: 2 }
+                ]
+            },
+            {
+                question: "Если день оказался пустым (нет встреч, сделок).",
+                options: [
+                    { text: "считаю, что зря потратил время", value: 0 },
+                    { text: "думаю, что завтра будет лучше", value: 1 },
+                    { text: "ищу новые способы, чтобы завтра было продуктивнее", value: 2 }
+                ]
+            },
+            {
+                question: "Клиент отложил решение на месяц.",
+                options: [
+                    { text: "забываю о нём", value: 0 },
+                    { text: "ставлю напоминание", value: 1 },
+                    { text: "планирую промежуточные касания", value: 2 }
+                ]
+            },
+            {
+                question: "Если руководитель поставил высокий план звонков.",
+                options: [
+                    { text: "сопротивляюсь", value: 0 },
+                    { text: "выполняю по минимуму", value: 1 },
+                    { text: "принимаю как вызов", value: 2 }
+                ]
+            },
+            {
+                question: "Если получаю много отказов подряд.",
+                options: [
+                    { text: "перестаю звонить", value: 0 },
+                    { text: "звоню дальше без особого энтузиазма", value: 1 },
+                    { text: "воспринимаю как путь к «да»", value: 2 }
+                ]
+            }
+        ];
+
+        function createTestQuestions() {
+            const container = document.getElementById('testQuestions');
+            
+            spqQuestions.forEach((question, questionIndex) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                
+                const questionTitle = document.createElement('h4');
+                questionTitle.textContent = `${questionIndex + 1}. ${question.question}`;
+                questionDiv.appendChild(questionTitle);
+                
+                question.options.forEach((option, optionIndex) => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'option';
+                    
+                    const label = document.createElement('label');
+                    
+                    const radio = document.createElement('input');
+                    radio.type = 'radio';
+                    radio.name = `question_${questionIndex}`;
+                    radio.value = option.value;
+                    radio.required = true;
+                    
+                    const text = document.createElement('span');
+                    text.textContent = `${String.fromCharCode(65 + optionIndex)}) ${option.text}`;
+                    
+                    label.appendChild(radio);
+                    label.appendChild(text);
+                    optionDiv.appendChild(label);
+                    questionDiv.appendChild(optionDiv);
+                });
+                
+                container.appendChild(questionDiv);
+            });
+        }
+
+        function calculateSPQScore() {
+            let totalScore = 0;
+            
+            spqQuestions.forEach((question, questionIndex) => {
+                const selectedOption = document.querySelector(`input[name="question_${questionIndex}"]:checked`);
+                if (selectedOption) {
+                    totalScore += parseInt(selectedOption.value);
+                }
+            });
+            
+            return totalScore;
+        }
+
+        function analyzeSPQScore(score) {
+            if (score >= 25) {
+                return {
+                    level: 'ВЫСОКАЯ',
+                    description: 'идеально для брокера',
+                    recommendation: 'Отличная настойчивость в продажах'
+                };
+            } else if (score >= 18) {
+                return {
+                    level: 'СРЕДНЯЯ',
+                    description: 'можно развивать',
+                    recommendation: 'Хорошая база, есть потенциал для роста'
+                };
+            } else {
+                return {
+                    level: 'НИЗКАЯ',
+                    description: 'слабый кандидат для продаж',
+                    recommendation: 'Требуется развитие настойчивости'
+                };
+            }
+        }
+
+        async function submitResults(candidateData) {
+            try {
+                const response = await fetch('/api/submit-spq', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(candidateData)
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    return { success: true, data: result };
+                } else {
+                    return { success: false, error: result.error || 'Ошибка сервера' };
+                }
+            } catch (error) {
+                return { success: false, error: 'Ошибка сети' };
+            }
+        }
+
+        // Инициализация формы
+        document.addEventListener('DOMContentLoaded', function() {
+            createTestQuestions();
+            
+            document.getElementById('spqForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Проверяем заполнение личной информации
+                const name = document.getElementById('name').value.trim();
+                const telegram = document.getElementById('telegram').value.trim();
+                
+                if (!name || !telegram) {
+                    alert('Пожалуйста, заполните все поля личной информации.');
+                    return;
+                }
+                
+                // Проверяем, что все вопросы заполнены
+                const totalQuestions = spqQuestions.length;
+                let answeredQuestions = 0;
+                
+                for (let i = 0; i < totalQuestions; i++) {
+                    const selectedOption = document.querySelector(`input[name="question_${i}"]:checked`);
+                    if (selectedOption) answeredQuestions++;
+                }
+                
+                if (answeredQuestions < totalQuestions) {
+                    alert(`Пожалуйста, ответьте на все вопросы. Отвечено: ${answeredQuestions} из ${totalQuestions}`);
+                    return;
+                }
+                
+                // Рассчитываем результат
+                const score = calculateSPQScore();
+                const analysis = analyzeSPQScore(score);
+                
+                // Показываем загрузку
+                document.getElementById('loading').classList.add('show');
+                document.getElementById('submitBtn').disabled = true;
+                document.getElementById('errorMessage').classList.remove('show');
+                
+                // Подготавливаем данные
+                const candidateData = {
+                    name: name,
+                    telegram: telegram,
+                    score: score,
+                    analysis: analysis
+                };
+                
+                // Отправляем данные
+                const result = await submitResults(candidateData);
+                
+                // Скрываем загрузку
+                document.getElementById('loading').classList.remove('show');
+                
+                if (result.success) {
+                    // Показываем успешное сообщение
+                    document.getElementById('successMessage').classList.add('show');
+                    
+                    // Скроллим к сообщению
+                    document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    // Показываем ошибку
+                    document.getElementById('errorMessage').classList.add('show');
+                    document.getElementById('errorMessage').scrollIntoView({ behavior: 'smooth' });
+                    document.getElementById('submitBtn').disabled = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
