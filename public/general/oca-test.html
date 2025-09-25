@@ -805,8 +805,8 @@
             // Если пользователь не авторизован, перенаправляем на главную
             if (isLoggedIn !== 'true' || !candidateData || candidateData.trim() === '') {
                 console.log('User not logged in, redirecting to main page');
-                localStorage.clear();
-                sessionStorage.clear();
+                
+                
                 window.location.href = '/';
                 return;
             }
@@ -815,16 +815,16 @@
                 const userData = JSON.parse(candidateData);
                 if (!userData.fullName || !userData.telegram || !userData.role) {
                     console.log('Incomplete user data, redirecting to main page');
-                    localStorage.clear();
-                    sessionStorage.clear();
+                    
+                    
                     window.location.href = '/';
                     return;
                 }
                 console.log('User is authorized:', userData.fullName);
             } catch (error) {
                 console.error('Error parsing user data:', error);
-                localStorage.clear();
-                sessionStorage.clear();
+                
+                
                 window.location.href = '/';
                 return;
             }
