@@ -548,8 +548,8 @@
             // Если есть флаг входа, но нет данных пользователя - очищаем всё
             if (isLoggedIn === 'true' && (!candidateData || candidateData.trim() === '')) {
                 console.log('Found isLoggedIn=true but no candidateData, clearing all data');
-                localStorage.clear();
-                sessionStorage.clear();
+                
+                
                 window.location.href = '/';
                 return;
             }
@@ -557,8 +557,8 @@
             // Если нет флага входа, но есть данные - тоже очищаем
             if (isLoggedIn !== 'true' && candidateData) {
                 console.log('Found candidateData but no isLoggedIn flag, clearing all data');
-                localStorage.clear();
-                sessionStorage.clear();
+                
+                
                 window.location.href = '/';
                 return;
             }
@@ -612,8 +612,8 @@
                     if (!userData.fullName || !userData.telegram || !userData.role || 
                         userData.fullName.trim() === '' || userData.telegram.trim() === '' || userData.role.trim() === '') {
                         console.log('Incomplete or empty user data, clearing and redirecting');
-                        localStorage.clear();
-                        sessionStorage.clear();
+                        
+                        
                         window.location.href = '/';
                         return;
                     }
@@ -652,15 +652,15 @@
                 } catch (error) {
                     console.error('Error parsing candidate data:', error);
                     // Если данные повреждены, очистить и перенаправить на вход
-                    localStorage.clear();
-                    sessionStorage.clear();
+                    
+                    
                     window.location.href = '/';
                 }
             } else {
                 // Если нет данных логина, перенаправить на страницу входа
                 console.log('No valid login data found, redirecting to login');
-                localStorage.clear();
-                sessionStorage.clear();
+                
+                
                 window.location.href = '/';
             }
         }
@@ -748,14 +748,14 @@
 
         function logout() {
             console.log('Logout called');
-            localStorage.clear(); // Очищаем все данные
+            // Очищаем все данные
             window.location.href = '/';
         }
 
         function clearAllData() {
             console.log('Clear all data called');
-            localStorage.clear();
-            sessionStorage.clear();
+            
+            
             alert('Все данные очищены. Перезагружаем страницу...');
             window.location.reload();
         }
@@ -804,7 +804,7 @@
             }
             
             console.log('User not logged in or invalid data, redirecting to login');
-            localStorage.clear(); // Очищаем поврежденные данные
+            // Очищаем поврежденные данные
             window.location.href = '/';
         }
 
@@ -1062,7 +1062,7 @@
             const timestampElement = document.getElementById('update-timestamp');
             if (timestampElement) {
                 // Статичная дата последнего обновления на сервере
-                timestampElement.textContent = `Последнее обновление: 26.09.2025, 04:30:39`;
+                timestampElement.textContent = `Последнее обновление: 26.09.2025, 04:32:20`;
             }
         });
     </script>
