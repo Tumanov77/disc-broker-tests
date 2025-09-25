@@ -231,6 +231,18 @@
                 gap: 10px;
             }
         }
+        
+        .update-timestamp {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            color: white;
+            font-size: 12px;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
+            border-radius: 5px;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
@@ -963,6 +975,27 @@
                 errorMessage.style.display = 'block';
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Отправить результаты';
+            }
+        });
+    </script>
+    
+    <!-- Отметка времени обновления -->
+    <div id="update-timestamp" class="update-timestamp"></div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const timestampElement = document.getElementById('update-timestamp');
+            if (timestampElement) {
+                const now = new Date();
+                const options = { 
+                    year: 'numeric', 
+                    month: '2-digit', 
+                    day: '2-digit', 
+                    hour: '2-digit', 
+                    minute: '2-digit', 
+                    second: '2-digit' 
+                };
+                timestampElement.textContent = `Обновлено: ${now.toLocaleDateString('ru-RU', options)}`;
             }
         });
     </script>

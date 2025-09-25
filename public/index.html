@@ -91,6 +91,18 @@
             align-items: center;
         }
 
+        .update-timestamp {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            color: white;
+            font-size: 12px;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
+            border-radius: 5px;
+            z-index: 1000;
+        }
+
         .tests-section {
             margin: 40px 0;
         }
@@ -553,6 +565,9 @@
         });
 
         function checkLoginStatus() {
+            // Миграция данных со старого домена
+            migrateOldDomainData();
+            
             const isLoggedIn = localStorage.getItem('isLoggedIn');
             const candidateData = localStorage.getItem('candidateData');
             const progress = JSON.parse(localStorage.getItem('testProgress') || '{}');
@@ -699,6 +714,27 @@
             sessionStorage.clear();
             alert('Все данные очищены. Перезагружаем страницу...');
             window.location.reload();
+        }
+
+        function migrateOldDomainData() {
+            // Проверяем, есть ли данные с нового домена
+            const hasNewData = localStorage.getItem('isLoggedIn') || localStorage.getItem('candidateData');
+            
+            if (!hasNewData) {
+                // Пытаемся найти данные в sessionStorage (они могут сохраниться при смене домена)
+                const sessionData = sessionStorage.getItem('tumanov_hr_data');
+                if (sessionData) {
+                    try {
+                        const data = JSON.parse(sessionData);
+                        localStorage.setItem('isLoggedIn', data.isLoggedIn || 'true');
+                        localStorage.setItem('candidateData', JSON.stringify(data.candidateData));
+                        localStorage.setItem('testProgress', JSON.stringify(data.testProgress || {}));
+                        console.log('Data migrated from sessionStorage');
+                    } catch (error) {
+                        console.log('Failed to migrate data from sessionStorage:', error);
+                    }
+                }
+            }
         }
 
         function checkAuthAndGo(url) {
@@ -972,6 +1008,27 @@
                 finalTest.element.onclick = null;
             }
         }
+    </script>
+    
+    <!-- Отметка времени обновления -->
+    <div id="update-timestamp" class="update-timestamp"></div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const timestampElement = document.getElementById('update-timestamp');
+            if (timestampElement) {
+                const now = new Date();
+                const options = { 
+                    year: 'numeric', 
+                    month: '2-digit', 
+                    day: '2-digit', 
+                    hour: '2-digit', 
+                    minute: '2-digit', 
+                    second: '2-digit' 
+                };
+                timestampElement.textContent = `Обновлено: ${now.toLocaleDateString('ru-RU', options)}`;
+            }
+        });
     </script>
 </body>
 </html>
