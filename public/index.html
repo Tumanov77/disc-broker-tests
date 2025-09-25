@@ -399,11 +399,11 @@
                 Каждый этап — фильтр: не прошёл → процесс завершается, прошёл → идёшь дальше.
             </div>
             
-            <!-- Прогресс-бар -->
-            <div class="progress-container">
+            <!-- Прогресс-бар (скрыт до этапа 3) -->
+            <div class="progress-container" id="progressContainer" style="display: none;">
                 <div class="progress-info">
-                    <span id="currentStage">Этап 1</span>
-                    <span id="stageCounter">1 из 4</span>
+                    <span id="currentStage">Этап 3</span>
+                    <span id="stageCounter">3 из 4</span>
                 </div>
                 <div class="progress-bar">
                     <div class="progress-fill" id="progressFill"></div>
@@ -507,9 +507,6 @@
             </div>
         </div>
 
-        <div class="info-section">
-            <p>ℹ️ <span class="highlight">Результаты:</span> Отправляются в HR отдел <a href="https://t.me/LyubovTarasova11" target="_blank" style="color: #1976d2; text-decoration: none;">@LyubovTarasova11</a> свяжется с вами</p>
-        </div>
 
         <div class="footer">
             <p>Система тестирования кандидатов Tumanov Group</p>
@@ -839,15 +836,22 @@
                 currentStage = totalStages + 1; // Все завершено
             }
             
-            // Обновить отображение
-            document.getElementById('currentStage').textContent = 
-                currentStage > totalStages ? 'Завершено!' : `Этап ${currentStage}`;
-            document.getElementById('stageCounter').textContent = 
-                currentStage > totalStages ? `${totalStages} из ${totalStages}` : `${currentStage} из ${totalStages}`;
-            
-            // Обновить прогресс-бар
-            const progressPercent = (completedStages / totalStages) * 100;
-            document.getElementById('progressFill').style.width = `${progressPercent}%`;
+            // Показать прогресс-бар только с этапа 3
+            if (currentStage >= 3) {
+                document.getElementById('progressContainer').style.display = 'block';
+                
+                // Обновить отображение
+                document.getElementById('currentStage').textContent = 
+                    currentStage > totalStages ? 'Завершено!' : `Этап ${currentStage}`;
+                document.getElementById('stageCounter').textContent = 
+                    currentStage > totalStages ? `${totalStages} из ${totalStages}` : `${currentStage} из ${totalStages}`;
+                
+                // Обновить прогресс-бар
+                const progressPercent = (completedStages / totalStages) * 100;
+                document.getElementById('progressFill').style.width = `${progressPercent}%`;
+            } else {
+                document.getElementById('progressContainer').style.display = 'none';
+            }
             
             // Отметить завершенные тесты
             markCompletedTests(progress);
