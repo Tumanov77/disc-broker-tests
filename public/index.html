@@ -548,6 +548,11 @@
             const candidateData = localStorage.getItem('candidateData');
             const progress = JSON.parse(localStorage.getItem('testProgress') || '{}');
             
+            // Отладочная информация
+            console.log('checkLoginStatus called');
+            console.log('isLoggedIn:', isLoggedIn);
+            console.log('candidateData:', candidateData);
+            
             if (isLoggedIn && candidateData) {
                 const userData = JSON.parse(candidateData);
                 
