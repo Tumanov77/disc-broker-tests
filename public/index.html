@@ -393,6 +393,13 @@
                 </div>
                 <button class="logout-btn" onclick="logout()">Выйти</button>
             </div>
+            
+            <div class="user-info" id="loginPrompt" style="display: none;">
+                <div class="user-data">
+                    <span>Для прохождения тестов необходимо войти в систему</span>
+                </div>
+                <button class="logout-btn" onclick="window.location.href='/entry.html'">Войти</button>
+            </div>
             <h1>🏢 Первый шаг в команду Tumanov Group</h1>
             <div class="description">
                 Мы используем многоэтапное тестирование, чтобы в команду попадали только сильные, честные и продуктивные люди.<br>
@@ -535,6 +542,14 @@
             // Добавляем эффект при клике на карточку
             document.querySelectorAll('.test-card').forEach(card => {
                 card.addEventListener('click', function() {
+                    // Проверяем, авторизован ли пользователь
+                    const isLoggedIn = localStorage.getItem('isLoggedIn');
+                    if (!isLoggedIn) {
+                        alert('Для прохождения тестов необходимо войти в систему');
+                        window.location.href = '/entry.html';
+                        return;
+                    }
+                    
                     this.style.transform = 'scale(0.98)';
                     setTimeout(() => {
                         this.style.transform = 'scale(1)';
@@ -554,29 +569,39 @@
             console.log('candidateData:', candidateData);
             
             if (isLoggedIn && candidateData) {
-                const userData = JSON.parse(candidateData);
-                
-                // Проверить, не был ли кандидат отсеян по КФУ
-                if (userData.role === 'sales_manager' && progress.kfuCompleted && !progress.kfuPassed) {
-                    // Показать сообщение об отсеивании и перенаправить
-                    alert('Вы не прошли проверку критических факторов успеха для данной должности. Тестирование завершается.');
-                    logout();
-                    return;
+                try {
+                    const userData = JSON.parse(candidateData);
+                    
+                    // Проверить, не был ли кандидат отсеян по КФУ
+                    if (userData.role === 'sales_manager' && progress.kfuCompleted && !progress.kfuPassed) {
+                        // Показать сообщение об отсеивании и перенаправить
+                        alert('Вы не прошли проверку критических факторов успеха для данной должности. Тестирование завершается.');
+                        logout();
+                        return;
+                    }
+                    
+                    // Убираем отчество из имени
+                    const nameParts = userData.fullName.split(' ');
+                    const displayName = nameParts.length > 1 ? `${nameParts[0]} ${nameParts[1]}` : userData.fullName;
+                    
+                    document.getElementById('userName').textContent = displayName;
+                    document.getElementById('userTelegram').textContent = userData.telegram;
+                    document.getElementById('userInfo').style.display = 'flex';
+                    
+                    // Показать тесты для выбранной роли
+                    showRoleSpecificTests(userData.role);
+                } catch (error) {
+                    console.error('Error parsing candidate data:', error);
+                    // Если данные повреждены, перенаправить на вход
+                    window.location.href = '/entry.html';
                 }
-                
-                // Убираем отчество из имени
-                const nameParts = userData.fullName.split(' ');
-                const displayName = nameParts.length > 1 ? `${nameParts[0]} ${nameParts[1]}` : userData.fullName;
-                
-                document.getElementById('userName').textContent = displayName;
-                document.getElementById('userTelegram').textContent = userData.telegram;
-                document.getElementById('userInfo').style.display = 'flex';
-                
-                // Показать тесты для выбранной роли
-                showRoleSpecificTests(userData.role);
             } else {
-                // Перенаправить на страницу входа
-                window.location.href = '/entry.html';
+                // Если нет данных логина, показать кнопку входа
+                console.log('No login data found, showing login prompt');
+                document.getElementById('loginPrompt').style.display = 'flex';
+                
+                // Показать все тесты для демонстрации
+                showRoleSpecificTests('broker');
             }
         }
 
@@ -660,9 +685,8 @@
         }
 
         function logout() {
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('candidateData');
-            localStorage.removeItem('testProgress');
+            console.log('Logout called');
+            localStorage.clear(); // Очищаем все данные
             window.location.href = '/entry.html';
         }
 
