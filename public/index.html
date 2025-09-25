@@ -105,6 +105,7 @@
             border: 2px solid transparent;
             transition: all 0.3s ease;
             cursor: pointer;
+            position: relative;
         }
 
         .test-card:hover {
@@ -291,6 +292,83 @@
             font-size: 0.9em;
         }
 
+        .progress-container {
+            margin: 25px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border: 1px solid #e9ecef;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .progress-info span {
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        #currentStage {
+            color: #1976d2;
+        }
+
+        #stageCounter {
+            color: #666;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            width: 25%;
+        }
+
+        .test-card.completed {
+            background: #d4edda;
+            border-color: #28a745;
+            cursor: default;
+        }
+
+        .test-card.completed h4 {
+            color: #155724;
+        }
+
+        .test-card.completed .test-link {
+            color: #155724;
+            cursor: default;
+            text-decoration: none;
+        }
+
+        .test-card.completed .test-link:hover {
+            text-decoration: none;
+        }
+
+        .test-card.completed::after {
+            content: "✓ Пройден";
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 20px;
@@ -319,6 +397,17 @@
             <div class="description">
                 Мы используем многоэтапное тестирование, чтобы в команду попадали только сильные, честные и продуктивные люди.<br>
                 Каждый этап — фильтр: не прошёл → процесс завершается, прошёл → идёшь дальше.
+            </div>
+            
+            <!-- Прогресс-бар -->
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span id="currentStage">Этап 1</span>
+                    <span id="stageCounter">1 из 4</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
             </div>
         </div>
 
@@ -619,6 +708,9 @@
                 document.getElementById('finalStage').style.display = 'block';
                 document.getElementById('unlockFinalStage').style.display = 'none';
             }
+            
+            // Обновить визуальный прогресс
+            updateProgressDisplay();
         }
 
         function unlockStage(stageNumber) {
@@ -651,7 +743,125 @@
             const progress = JSON.parse(localStorage.getItem('testProgress') || '{}');
             progress[`test${testNumber}Completed`] = true;
             localStorage.setItem('testProgress', JSON.stringify(progress));
+            
+            // Обновить визуальный прогресс
+            updateProgressDisplay();
         };
+
+        function updateProgressDisplay() {
+            const progress = JSON.parse(localStorage.getItem('testProgress') || '{}');
+            const candidateData = JSON.parse(localStorage.getItem('candidateData') || '{}');
+            const role = candidateData.role;
+            
+            // Определить общее количество этапов в зависимости от роли
+            let totalStages = 4; // По умолчанию
+            if (role === 'broker') {
+                totalStages = 4; // Этап 1, Этап 2, Профильные, Финальный
+            } else {
+                totalStages = 3; // Этап 1, Этап 2, Финальный (без профильных)
+            }
+            
+            // Определить текущий этап
+            let currentStage = 1;
+            let completedStages = 0;
+            
+            // Этап 1 завершен?
+            const stage1Tests = ['test1', 'test2', 'test3'];
+            const completedStage1 = stage1Tests.every(test => progress[test + 'Completed']);
+            if (completedStage1) {
+                completedStages++;
+                currentStage = 2;
+            }
+            
+            // Этап 2 завершен?
+            const stage2Tests = ['test4', 'test5'];
+            const completedStage2 = stage2Tests.every(test => progress[test + 'Completed']);
+            if (completedStage2) {
+                completedStages++;
+                if (role === 'broker') {
+                    currentStage = 3; // Профильные тесты
+                } else {
+                    currentStage = 3; // Финальный этап
+                }
+            }
+            
+            // Профильные тесты завершены? (только для брокеров)
+            if (role === 'broker') {
+                const roleTests = ['test7'];
+                const completedRoleTests = roleTests.every(test => progress[test + 'Completed']);
+                if (completedRoleTests) {
+                    completedStages++;
+                    currentStage = 4; // Финальный этап
+                }
+            }
+            
+            // Финальный этап завершен?
+            if (progress.test6Completed) {
+                completedStages++;
+                currentStage = totalStages + 1; // Все завершено
+            }
+            
+            // Обновить отображение
+            document.getElementById('currentStage').textContent = 
+                currentStage > totalStages ? 'Завершено!' : `Этап ${currentStage}`;
+            document.getElementById('stageCounter').textContent = 
+                currentStage > totalStages ? `${totalStages} из ${totalStages}` : `${currentStage} из ${totalStages}`;
+            
+            // Обновить прогресс-бар
+            const progressPercent = (completedStages / totalStages) * 100;
+            document.getElementById('progressFill').style.width = `${progressPercent}%`;
+            
+            // Отметить завершенные тесты
+            markCompletedTests(progress);
+        }
+
+        function markCompletedTests(progress) {
+            // Этап 1
+            const stage1Tests = [
+                { test: 'test1', element: document.querySelector('[onclick*="/t1"]') },
+                { test: 'test2', element: document.querySelector('[onclick*="/t2"]') },
+                { test: 'test3', element: document.querySelector('[onclick*="/t3"]') }
+            ];
+            
+            stage1Tests.forEach(({ test, element }) => {
+                if (progress[test + 'Completed'] && element) {
+                    element.classList.add('completed');
+                    element.onclick = null; // Заблокировать повторное прохождение
+                }
+            });
+            
+            // Этап 2
+            const stage2Tests = [
+                { test: 'test4', element: document.querySelector('[onclick*="/t4"]') },
+                { test: 'test5', element: document.querySelector('[onclick*="/t5"]') }
+            ];
+            
+            stage2Tests.forEach(({ test, element }) => {
+                if (progress[test + 'Completed'] && element) {
+                    element.classList.add('completed');
+                    element.onclick = null;
+                }
+            });
+            
+            // Профильные тесты (только для брокеров)
+            const roleTests = [
+                { test: 'test7', element: document.querySelector('[onclick*="/b1"]') }
+            ];
+            
+            roleTests.forEach(({ test, element }) => {
+                if (progress[test + 'Completed'] && element) {
+                    element.classList.add('completed');
+                    element.onclick = null;
+                }
+            });
+            
+            // Финальный этап
+            const finalTest = { test: 'test6', element: document.querySelector('[onclick*="/t6"]') };
+            if (progress[finalTest.test + 'Completed'] && finalTest.element) {
+                finalTest.element.classList.add('completed');
+                finalTest.element.onclick = null;
+            }
+        }
     </script>
 </body>
 </html>
