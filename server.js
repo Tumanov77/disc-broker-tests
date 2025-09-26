@@ -1,6 +1,8 @@
 const express = require('express');
 const TelegramBot = require('node-telegram-bot-api');
 const cors = require('cors');
+const helmet = require('helmet');
+const compression = require('compression');
 require('dotenv').config();
 // Подключение к базе данных с обработкой ошибок
 let User, TestResult, Session;
@@ -22,9 +24,29 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors());
-app.use(express.json());
-app.use(express.static('public'));
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            styleSrc: ["'self'", "'unsafe-inline'"],
+            scriptSrc: ["'self'", "'unsafe-inline'"],
+            imgSrc: ["'self'", "data:", "https:"],
+            connectSrc: ["'self'"]
+        }
+    }
+}));
+app.use(compression());
+app.use(cors({
+    origin: process.env.NODE_ENV === 'production' ? ['https://tumanov-group-hr.up.railway.app'] : true,
+    credentials: true
+}));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.static('public', { 
+    maxAge: '1d',
+    etag: false,
+    lastModified: false
+}));
 
 // Telegram Bot setup
 const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: false });
@@ -1211,13 +1233,30 @@ app.get('/api/admin/stats', async (req, res) => {
     }
 });
 
-// Обработка ошибок сервера
+// Обработка ошибок сервера (обновлено для Express 5.x)
 process.on('uncaughtException', (error) => {
     console.error('Uncaught Exception:', error);
+    if (process.env.NODE_ENV === 'production') {
+        process.exit(1);
+    }
 });
 
 process.on('unhandledRejection', (reason, promise) => {
     console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+    if (process.env.NODE_ENV === 'production') {
+        process.exit(1);
+    }
+});
+
+// Graceful shutdown для Express 5.x
+process.on('SIGTERM', () => {
+    console.log('SIGTERM received, shutting down gracefully');
+    process.exit(0);
+});
+
+process.on('SIGINT', () => {
+    console.log('SIGINT received, shutting down gracefully');
+    process.exit(0);
 });
 
 console.log('Starting server...');
