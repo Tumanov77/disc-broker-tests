@@ -232,34 +232,20 @@
             console.log('isLoggedIn:', isLoggedIn);
             console.log('candidateData:', candidateData);
             
-            // Если пользователь не авторизован, перенаправляем на главную
-            if (isLoggedIn !== 'true' || !candidateData || candidateData.trim() === '') {
-                console.log('User not logged in, redirecting to main page');
-                localStorage.clear();
-                sessionStorage.clear();
-                window.location.href = '/';
-                return;
-            }
-            
-            try {
-                const userData = JSON.parse(candidateData);
-                if (!userData.fullName || !userData.telegram || !userData.role) {
-                    console.log('Incomplete user data, redirecting to main page');
-                    localStorage.clear();
-                    sessionStorage.clear();
-                    window.location.href = '/';
-                    return;
+            // Убираем строгие проверки - просто пытаемся отобразить данные
+            if (isLoggedIn === 'true' && candidateData && candidateData.trim() !== '') {
+                try {
+                    const userData = JSON.parse(candidateData);
+                    console.log('User data found:', userData);
+                    
+                    // Отображаем информацию о пользователе
+                    displayUserInfo(userData);
+                } catch (error) {
+                    console.error('Error parsing user data:', error);
+                    // НЕ очищаем localStorage - просто не показываем данные
                 }
-                console.log('User is authorized:', userData.fullName);
-                
-                // Отображаем информацию о пользователе
-                displayUserInfo(userData);
-            } catch (error) {
-                console.error('Error parsing user data:', error);
-                localStorage.clear();
-                sessionStorage.clear();
-                window.location.href = '/';
-                return;
+            } else {
+                console.log('No user data found, showing default view');
             }
         });
 
@@ -334,7 +320,7 @@
             const timestampElement = document.getElementById('update-timestamp');
             if (timestampElement) {
                 // Статичная дата последнего обновления на сервере
-                timestampElement.textContent = `Последнее обновление: 26.09.2025, 13:31:38`;
+                timestampElement.textContent = `Последнее обновление: 26.09.2025, 13:38:47`;
             }
         });
     </script>

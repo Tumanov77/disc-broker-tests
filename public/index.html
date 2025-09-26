@@ -176,14 +176,14 @@
         </div>
     </div>
 
-    <div class="timestamp" id="update-timestamp">Последнее обновление: 26.09.2025, 13:31:38</div>
+    <div class="timestamp" id="update-timestamp">Последнее обновление: 26.09.2025, 13:38:47</div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const timestampElement = document.getElementById('update-timestamp');
             if (timestampElement) {
                 // Статичная дата последнего обновления на сервере
-                timestampElement.textContent = `Последнее обновление: 26.09.2025, 13:31:38`;
+                timestampElement.textContent = `Последнее обновление: 26.09.2025, 13:38:47`;
             }
 
             // Обработка формы логина
@@ -204,6 +204,7 @@
                     fullName: fullName,
                     telegram: telegram,
                     position: position,
+                    role: position, // Добавляем role для совместимости
                     loginTime: new Date().toISOString(),
                     isLoggedIn: true
                 };
