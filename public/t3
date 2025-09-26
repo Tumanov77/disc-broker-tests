@@ -299,7 +299,7 @@
             <h3>✅ Тест 2 завершен!</h3>
             <p>Результаты отправлены в HR отдел</p>
             <p>Теперь заполните Тест 3</p>
-            <button onclick="window.location.href='/test3'" style="margin-top: 15px; padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">
+            <button onclick="window.location.href='/entry.html'" style="margin-top: 15px; padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">
                 Перейти к Тесту 3
             </button>
         </div>
