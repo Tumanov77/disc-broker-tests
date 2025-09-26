@@ -296,7 +296,7 @@
         </div>
 
         <div id="successMessage" class="success-message">
-            <h3>✅ Тест 3 завершен!</h3>
+            <h3>✅ ТЕСТ 3 ЗАВЕРШЕН - ИСПРАВЛЕНО!</h3>
             <p>Результаты отправлены в HR отдел</p>
             <p>Теперь заполните Тест 3</p>
             <button onclick="window.location.href='/entry.html'" style="margin-top: 15px; padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">
