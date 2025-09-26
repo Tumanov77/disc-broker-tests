@@ -176,14 +176,14 @@
         </div>
     </div>
 
-    <div class="timestamp" id="update-timestamp">Последнее обновление: 26.09.2025, 13:28:31</div>
+    <div class="timestamp" id="update-timestamp">Последнее обновление: 26.09.2025, 13:31:38</div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const timestampElement = document.getElementById('update-timestamp');
             if (timestampElement) {
                 // Статичная дата последнего обновления на сервере
-                timestampElement.textContent = `Последнее обновление: 26.09.2025, 13:28:31`;
+                timestampElement.textContent = `Последнее обновление: 26.09.2025, 13:31:38`;
             }
 
             // Обработка формы логина
@@ -209,6 +209,10 @@
                 };
 
                 localStorage.setItem('candidateData', JSON.stringify(candidateData));
+                localStorage.setItem('isLoggedIn', 'true');
+                
+                console.log('Data saved:', candidateData);
+                console.log('localStorage check:', localStorage.getItem('candidateData'));
 
                 // Перенаправляем на страницу с этапами тестирования
                 window.location.href = '/entry.html';
