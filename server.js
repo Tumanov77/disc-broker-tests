@@ -36,16 +36,42 @@ app.use(helmet({
     }
 }));
 app.use(compression());
+
+// Мониторинг производительности
+app.use((req, res, next) => {
+    const start = Date.now();
+    res.on('finish', () => {
+        const duration = Date.now() - start;
+        console.log(`${req.method} ${req.url} - ${res.statusCode} - ${duration}ms`);
+        
+        // Логирование медленных запросов
+        if (duration > 1000) {
+            console.warn(`Slow request: ${req.method} ${req.url} took ${duration}ms`);
+        }
+    });
+    next();
+});
 app.use(cors({
     origin: process.env.NODE_ENV === 'production' ? ['https://tumanov-group-hr.up.railway.app'] : true,
     credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+// Оптимизированная раздача статических файлов
 app.use(express.static('public', { 
     maxAge: '1d',
-    etag: false,
-    lastModified: false
+    etag: true,
+    lastModified: true,
+    setHeaders: (res, path) => {
+        // Кэширование для разных типов файлов
+        if (path.endsWith('.html')) {
+            res.setHeader('Cache-Control', 'public, max-age=300'); // 5 минут для HTML
+        } else if (path.endsWith('.css') || path.endsWith('.js')) {
+            res.setHeader('Cache-Control', 'public, max-age=86400'); // 1 день для CSS/JS
+        } else if (path.endsWith('.png') || path.endsWith('.jpg') || path.endsWith('.ico')) {
+            res.setHeader('Cache-Control', 'public, max-age=604800'); // 1 неделя для изображений
+        }
+    }
 }));
 
 // Telegram Bot setup
@@ -954,15 +980,24 @@ app.post('/submit-kfu', async (req, res) => {
     }
 });
 
-// Health check endpoint
+// Health check endpoint с метриками
 app.get('/health', (req, res) => {
     console.log('Health check requested');
     try {
+        const memUsage = process.memoryUsage();
         res.json({ 
             status: 'OK', 
             timestamp: new Date().toISOString(),
             port: PORT,
-            uptime: process.uptime()
+            uptime: process.uptime(),
+            memory: {
+                rss: Math.round(memUsage.rss / 1024 / 1024) + ' MB',
+                heapTotal: Math.round(memUsage.heapTotal / 1024 / 1024) + ' MB',
+                heapUsed: Math.round(memUsage.heapUsed / 1024 / 1024) + ' MB',
+                external: Math.round(memUsage.external / 1024 / 1024) + ' MB'
+            },
+            nodeVersion: process.version,
+            platform: process.platform
         });
     } catch (error) {
         console.error('Health check error:', error);
