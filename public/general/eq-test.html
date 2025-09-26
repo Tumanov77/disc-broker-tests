@@ -327,7 +327,7 @@
                 document.getElementById('userInfo').style.display = 'flex';
             } else {
                 // Перенаправить на страницу входа
-                window.location.href = '/entry.html';
+                // window.location.href = '/entry.html';
             }
         }
 
@@ -335,7 +335,7 @@
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('candidateData');
             localStorage.removeItem('testProgress');
-            window.location.href = '/entry.html';
+            // window.location.href = '/entry.html';
         }
 
         function updateTestProgress(stageNumber) {
@@ -610,9 +610,9 @@
                 // Проверяем заполнение личной информации
                 // Получаем данные из localStorage
                 const candidateData = JSON.parse(localStorage.getItem('candidateData'));
-                if (!candidateData) {
+                // if (!candidateData) {
                     alert('Ошибка: данные пользователя не найдены. Пожалуйста, войдите заново.');
-                    window.location.href = '/entry.html';
+                    // window.location.href = '/entry.html';
                     return;
                 }
                 
@@ -667,7 +667,7 @@
                     
                     // Перенаправляем на страницу этапов через 3 секунды
                     setTimeout(() => {
-                        window.location.href = '/entry.html';
+                        // window.location.href = '/entry.html';
                     }, 3000);
                 } else {
                     // Показываем ошибку

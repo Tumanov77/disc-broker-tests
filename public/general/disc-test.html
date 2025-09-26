@@ -336,8 +336,8 @@
                 </div>
                 <button class="logout-btn" onclick="logout()">Выйти</button>
             </div>
-            <h1>Тест 1</h1>
-            <p>Общее тестирование</p>
+            <h1>🔍 Тест 1 - DISC Профиль</h1>
+            <p>Определение вашего поведенческого типа для работы в команде</p>
         </div>
 
         <form id="discForm">
@@ -368,7 +368,7 @@
             <h3>✅ Тест 1 завершен!</h3>
             <p>Результаты отправлены в HR отдел</p>
             <p>Теперь заполните Тест 2</p>
-            <button onclick="window.location.href='/test2'" style="margin-top: 15px; padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">
+            <button onclick="window.location.href='/t2'" style="margin-top: 15px; padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">
                 Перейти к Тесту 2
             </button>
         </div>
@@ -391,11 +391,11 @@
             console.log('candidateData:', candidateData);
             
             // Если пользователь не авторизован, перенаправляем на главную
-            // if (isLoggedIn !== 'true' || !candidateData || candidateData.trim() === '') {
+            if (isLoggedIn !== 'true' || !candidateData || candidateData.trim() === '') {
                 console.log('User not logged in, redirecting to main page');
-                
-                
-                // window.location.href = '/';
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = '/';
                 return;
             }
             
@@ -403,17 +403,17 @@
                 const userData = JSON.parse(candidateData);
                 if (!userData.fullName || !userData.telegram || !userData.role) {
                     console.log('Incomplete user data, redirecting to main page');
-                    
-                    
-                    // window.location.href = '/';
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    window.location.href = '/';
                     return;
                 }
                 console.log('User is authorized:', userData.fullName);
             } catch (error) {
                 console.error('Error parsing user data:', error);
-                
-                
-                // window.location.href = '/';
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = '/';
                 return;
             }
             
