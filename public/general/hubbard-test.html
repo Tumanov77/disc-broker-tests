@@ -272,18 +272,7 @@
 
         <div class="form-section">
             <form id="hubbardForm">
-                <!-- Personal Info -->
-                <div class="form-group">
-                    <h3></h3>
-                    <div style="margin-bottom: 15px;">
-                        <label for="name">Имя *</label>
-                        <input type="text" id="name" name="name" required>
-                    </div>
-                    <div>
-                        <label for="telegram">Телеграм ник *</label>
-                        <input type="text" id="telegram" name="telegram" required placeholder="@username">
-                    </div>
-                </div>
+                <!-- Данные пользователя загружаются автоматически -->
 
                 <!-- Instructions -->
                 <div class="instructions">
@@ -598,9 +587,16 @@
         document.getElementById('hubbardForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const formData = new FormData(this);
-            const name = formData.get('name');
-            const telegram = formData.get('telegram');
+            // Получаем данные пользователя из localStorage
+            const candidateData = JSON.parse(localStorage.getItem('candidateData'));
+            if (!candidateData) {
+                alert('Ошибка: данные пользователя не найдены. Пожалуйста, войдите заново.');
+                window.location.href = '/entry.html';
+                return;
+            }
+            
+            const name = candidateData.fullName;
+            const telegram = candidateData.telegram;
             
             // Собираем ответы
             const answers = {};
@@ -712,11 +708,11 @@
             console.log('candidateData:', candidateData);
             
             // Если пользователь не авторизован, перенаправляем на главную
-            // if (isLoggedIn !== 'true' || !candidateData || candidateData.trim() === '') {
+            if (isLoggedIn !== 'true' || !candidateData || candidateData.trim() === '') {
                 console.log('User not logged in, redirecting to main page');
-                
-                
-                // window.location.href = '/';
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = '/';
                 return;
             }
             
@@ -724,17 +720,17 @@
                 const userData = JSON.parse(candidateData);
                 if (!userData.fullName || !userData.telegram || !userData.role) {
                     console.log('Incomplete user data, redirecting to main page');
-                    
-                    
-                    // window.location.href = '/';
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    window.location.href = '/';
                     return;
                 }
                 console.log('User is authorized:', userData.fullName);
             } catch (error) {
                 console.error('Error parsing user data:', error);
-                
-                
-                // window.location.href = '/';
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = '/';
                 return;
             }
             
