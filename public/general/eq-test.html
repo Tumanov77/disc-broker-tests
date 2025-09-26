@@ -311,9 +311,10 @@
     </div>
 
     <script>
-        // Проверка логина при загрузке страницы
+        // Проверка логина и инициализация теста при загрузке страницы
         document.addEventListener('DOMContentLoaded', function() {
             checkLoginStatus();
+            createTestQuestions(); // Добавляем создание вопросов
         });
 
         function checkLoginStatus() {
@@ -327,7 +328,7 @@
                 document.getElementById('userInfo').style.display = 'flex';
             } else {
                 // Перенаправить на страницу входа
-                // window.location.href = '/entry.html';
+                window.location.href = '/entry.html';
             }
         }
 
@@ -335,7 +336,7 @@
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('candidateData');
             localStorage.removeItem('testProgress');
-            // window.location.href = '/entry.html';
+            window.location.href = '/entry.html';
         }
 
         function updateTestProgress(stageNumber) {
@@ -602,17 +603,15 @@
 
         // Инициализация формы
         document.addEventListener('DOMContentLoaded', function() {
-            createTestQuestions();
-            
             document.getElementById('eqForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
                 // Проверяем заполнение личной информации
                 // Получаем данные из localStorage
                 const candidateData = JSON.parse(localStorage.getItem('candidateData'));
-                // if (!candidateData) {
+                if (!candidateData) {
                     alert('Ошибка: данные пользователя не найдены. Пожалуйста, войдите заново.');
-                    // window.location.href = '/entry.html';
+                    window.location.href = '/entry.html';
                     return;
                 }
                 
@@ -667,7 +666,7 @@
                     
                     // Перенаправляем на страницу этапов через 3 секунды
                     setTimeout(() => {
-                        // window.location.href = '/entry.html';
+                        window.location.href = '/entry.html';
                     }, 3000);
                 } else {
                     // Показываем ошибку
@@ -681,51 +680,5 @@
     
     <!-- Отметка времени обновления -->
     <div id="update-timestamp" class="update-timestamp"></div>
-    
-    <script>
-        // Проверка авторизации при загрузке страницы
-        document.addEventListener('DOMContentLoaded', function() {
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            const candidateData = localStorage.getItem('candidateData');
-            
-            console.log('Test page loaded, checking auth:');
-            console.log('isLoggedIn:', isLoggedIn);
-            console.log('candidateData:', candidateData);
-            
-            // Если пользователь не авторизован, перенаправляем на главную
-            // if (isLoggedIn !== 'true' || !candidateData || candidateData.trim() === '') {
-                console.log('User not logged in, redirecting to main page');
-                
-                
-                // window.location.href = '/';
-                return;
-            }
-            
-            try {
-                const userData = JSON.parse(candidateData);
-                if (!userData.fullName || !userData.telegram || !userData.role) {
-                    console.log('Incomplete user data, redirecting to main page');
-                    
-                    
-                    // window.location.href = '/';
-                    return;
-                }
-                console.log('User is authorized:', userData.fullName);
-            } catch (error) {
-                console.error('Error parsing user data:', error);
-                
-                
-                // window.location.href = '/';
-                return;
-            }
-            
-            // Устанавливаем отметку времени
-            const timestampElement = document.getElementById('update-timestamp');
-            if (timestampElement) {
-                // Статичная дата последнего обновления на сервере
-                timestampElement.textContent = `Обновлено: 26.09.2025, 03:15:00`;
-            }
-        });
-    </script>
 </body>
 </html>
