@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Входные тесты - Tumanov Group</title>
+    <title>Этапы тестирования - Tumanov Group</title>
     <style>
         * {
             margin: 0;
@@ -15,159 +15,131 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             padding: 20px;
         }
 
         .container {
+            max-width: 1200px;
+            margin: 0 auto;
             background: white;
             border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            width: 100%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
         }
 
         .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
             text-align: center;
-            margin-bottom: 30px;
+            position: relative;
         }
 
-        .header h1 {
-            color: #333;
-            font-size: 2.2em;
-            margin-bottom: 10px;
-            font-weight: 600;
+        .user-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: none;
+            align-items: center;
+            gap: 15px;
         }
 
-        .header .subtitle {
-            color: #666;
-            font-size: 1.1em;
-            line-height: 1.5;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
+        .user-data {
+            color: white;
             font-weight: 500;
         }
 
-        .form-group input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e1e5e9;
-            border-radius: 10px;
-            font-size: 1em;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .form-group input::placeholder {
-            color: #aaa;
-        }
-
-        .form-group select {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e1e5e9;
-            border-radius: 10px;
-            font-size: 1em;
-            background: white;
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 16px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: border-color 0.3s ease;
+            transition: all 0.3s ease;
         }
 
-        .form-group select:focus {
-            outline: none;
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .description {
+            font-size: 1.2em;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .test-card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .test-card:hover {
             border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.1);
         }
 
-        .submit-btn {
-            width: 100%;
+        .test-card h4 {
+            color: #333;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .test-link {
+            display: inline-block;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 1.1em;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 25px;
             font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
         }
 
-        .submit-btn:hover {
+        .test-link:hover {
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
         }
 
-        .submit-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .loading.show {
-            display: block;
-        }
-
-        .error-message {
-            display: none;
-            background: #fee;
-            color: #c33;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .error-message.show {
-            display: block;
-        }
-
-        .info {
-            background: #f0f4ff;
-            border: 1px solid #d1e7ff;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-
-        .info h3 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 1.1em;
-        }
-
-        .info p {
+        .time-info {
             color: #666;
-            line-height: 1.5;
+            font-size: 0.9em;
+            font-weight: normal;
         }
-        
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            border-top: 1px solid #e9ecef;
+        }
+
         .update-timestamp {
             position: fixed;
-            bottom: 10px;
-            right: 10px;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
             color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
             font-size: 12px;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 5px 10px;
-            border-radius: 5px;
             z-index: 1000;
         }
     </style>
@@ -175,64 +147,71 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🏢 Входные тесты</h1>
-            <div class="subtitle">Первый шаг в команду Tumanov Group</div>
+            <div class="user-info" id="userInfo" style="display: none;">
+                <div class="user-data">
+                    <span id="userName"></span> (<span id="userTelegram"></span>)
+                </div>
+                <div class="user-buttons">
+                    <button class="logout-btn" onclick="clearAllData()" style="margin-right: 10px; background: rgba(220,53,69,0.8);">Очистить данные</button>
+                    <button class="logout-btn" onclick="logout()">Выйти</button>
+                </div>
+            </div>
+            
+            <h1>🏢 Первый шаг в команду Tumanov Group</h1>
+            <div class="description">
+                Мы используем тестирование, чтобы в команду попадали только сильные, честные и продуктивные люди.<br>
+                Каждый этап — фильтр: не прошёл → процесс завершается, прошёл → идёшь дальше.
+            </div>
         </div>
 
-
-        <form id="entryForm">
-            <div class="form-group">
-                <label for="fullName">Полное имя *</label>
-                <input type="text" id="fullName" name="fullName" placeholder="Иванов Иван Иванович" required>
+        <div class="content">
+            <div class="test-card" onclick="window.location.href='/t1'">
+                <h4>✅ Тест 1 РАБОТАЕТ! <span class="time-info">(5 мин)</span></h4>
+                <p>DISC профиль - определение поведенческого типа</p>
+                <a href="javascript:void(0)" class="test-link" onclick="window.location.href='/t1'">🚀 НАЧАТЬ ТЕСТ</a>
             </div>
 
-            <div class="form-group">
-                <label for="telegram">Telegram ник *</label>
-                <input type="text" id="telegram" name="telegram" placeholder="@username или username" required>
+            <div class="test-card" onclick="window.location.href='/t2'">
+                <h4>✅ Тест 2 РАБОТАЕТ! <span class="time-info">(5 мин)</span></h4>
+                <p>Тональная шкала Хаббарда - эмоциональное состояние</p>
+                <a href="javascript:void(0)" class="test-link" onclick="window.location.href='/t2'">🚀 НАЧАТЬ ТЕСТ</a>
             </div>
 
-            <div class="form-group">
-                <label for="role">Должность, на которую претендуете *</label>
-                <select id="role" name="role" required>
-                    <option value="">Выберите должность</option>
-                    <option value="broker">🏠 Брокер по продажам недвижимости</option>
-                    <option value="sales_manager">👔 Руководитель отдела продаж</option>
-                    <option value="marketing_manager">📢 Руководитель отдела маркетинга</option>
-                    <option value="marketing_analyst">📊 Маркетолог-аналитик (онлайн-привлечение)</option>
-                    <option value="operational_manager">⚙️ Операционный менеджер</option>
-                    <option value="assistant">👥 Ассистент руководителя</option>
-                    <option value="backoffice">💼 Сотрудник бэкофиса</option>
-                    <option value="designer">🎨 Дизайнер</option>
-                    <option value="other">🔧 Другая должность</option>
-                </select>
+            <div class="test-card" onclick="window.location.href='/t3'">
+                <h4>✅ Тест 3 РАБОТАЕТ! <span class="time-info">(10–15 мин)</span></h4>
+                <p>Эмоциональный интеллект - понимание эмоций</p>
+                <a href="javascript:void(0)" class="test-link" onclick="window.location.href='/t3'">🚀 НАЧАТЬ ТЕСТ</a>
             </div>
-
-            <button type="submit" class="submit-btn" id="submitBtn">
-                Начать тестирование
-            </button>
-        </form>
-
-        <div id="loading" class="loading">
-            <h3>⏳ Регистрация...</h3>
-            <p>Подготавливаем ваш профиль для тестирования</p>
         </div>
 
-        <div id="errorMessage" class="error-message">
-            Произошла ошибка. Попробуйте еще раз.
+        <div class="footer">
+            Система тестирования кандидатов Tumanov Group
         </div>
     </div>
 
+    <!-- Отметка времени обновления -->
+    <div id="update-timestamp" class="update-timestamp"></div>
+    
     <script>
-        // Проверка авторизации при загрузке страницы
         document.addEventListener('DOMContentLoaded', function() {
+            const timestampElement = document.getElementById('update-timestamp');
+            if (timestampElement) {
+                // Статичная дата последнего обновления на сервере
+                timestampElement.textContent = `Последнее обновление: 26.09.2025, 13:43:19`;
+            }
+
+            // Проверяем данные пользователя
+            checkUserData();
+        });
+
+        function checkUserData() {
             const isLoggedIn = localStorage.getItem('isLoggedIn');
             const candidateData = localStorage.getItem('candidateData');
             
-            console.log('Tests page loaded, checking auth:');
+            console.log('Checking user data:');
             console.log('isLoggedIn:', isLoggedIn);
             console.log('candidateData:', candidateData);
             
-            // Убираем строгие проверки - просто пытаемся отобразить данные
             if (isLoggedIn === 'true' && candidateData && candidateData.trim() !== '') {
                 try {
                     const userData = JSON.parse(candidateData);
@@ -242,14 +221,12 @@
                     displayUserInfo(userData);
                 } catch (error) {
                     console.error('Error parsing user data:', error);
-                    // НЕ очищаем localStorage - просто не показываем данные
                 }
             } else {
                 console.log('No user data found, showing default view');
             }
-        });
+        }
 
-        // Функция отображения информации о пользователе
         function displayUserInfo(userData) {
             console.log('Displaying user info:', userData);
             
@@ -273,56 +250,18 @@
             }
         }
 
-        document.getElementById('entryForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const submitBtn = document.getElementById('submitBtn');
-            const loading = document.getElementById('loading');
-            const errorMessage = document.getElementById('errorMessage');
-            
-            // Показать загрузку
-            submitBtn.disabled = true;
-            loading.classList.add('show');
-            errorMessage.classList.remove('show');
-            
-            // Получить данные формы
-            const formData = new FormData(this);
-            const userData = {
-                fullName: formData.get('fullName'),
-                telegram: formData.get('telegram'),
-                role: formData.get('role')
-            };
-            
-            try {
-                // Сохранить данные пользователя в localStorage
-                localStorage.setItem('candidateData', JSON.stringify(userData));
-                
-                // Установить флаг входа
-                localStorage.setItem('isLoggedIn', 'true');
-                
-                // Перенаправить на главную страницу
-                window.location.href = '/';
-                
-            } catch (error) {
-                console.error('Ошибка:', error);
-                loading.classList.remove('show');
-                errorMessage.classList.add('show');
-                submitBtn.disabled = false;
-            }
-        });
-    </script>
-    
-    <!-- Отметка времени обновления -->
-    <div id="update-timestamp" class="update-timestamp"></div>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const timestampElement = document.getElementById('update-timestamp');
-            if (timestampElement) {
-                // Статичная дата последнего обновления на сервере
-                timestampElement.textContent = `Последнее обновление: 26.09.2025, 13:38:47`;
-            }
-        });
+        function clearAllData() {
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.href = '/';
+        }
+
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('candidateData');
+            localStorage.removeItem('testProgress');
+            window.location.href = '/';
+        }
     </script>
 </body>
 </html>
