@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест 2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #6c757d;
+            font-size: 16px;
+        }
+
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .user-data {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            background: #f8f9fa;
+        }
+
+        .form-section h3 {
+            color: #495057;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ced4da;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.15s ease-in-out;
+        }
+
+        .form-group input[type="text"]:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+        }
+
+        .instructions {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .instructions h3 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+
+        .instructions p {
+            margin-bottom: 8px;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+        }
+
+        .question h4 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .option {
+            margin-bottom: 12px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            border: 1px solid #e9ecef;
+        }
+
+        .option label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 12px;
+            transform: scale(1.2);
+        }
+
+        .submit-btn {
+            background: #28a745;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 30px;
+            transition: background-color 0.15s ease-in-out;
+        }
+
+        .submit-btn:hover {
+            background: #218838;
+        }
+
+        .submit-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            background: #e3f2fd;
+            border-radius: 6px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .success-message {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .success-message h3 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+
+        .success-message p {
+            color: #155724;
+            margin-bottom: 8px;
+        }
+
+        .error-message {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 6px;
+            color: #721c24;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+        }
+        
+        .update-timestamp {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            color: white;
+            font-size: 12px;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
+            border-radius: 5px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="user-info" id="userInfo" style="display: none;">
+                <div class="user-data">
+                    <span id="userName"></span> (<span id="userTelegram"></span>)
+                </div>
+                <button class="logout-btn" onclick="logout()">Выйти</button>
+            </div>
+            <h1>Тест 3</h1>
+            <p>Общее тестирование</p>
+        </div>
+
+        <form id="eqForm">
+
+            <!-- Инструкции -->
+            <div class="instructions">
+                <h3>📋 Инструкция</h3>
+                <p>Выберите тот вариант ответа, который больше всего соответствует вашим действиям.</p>
+                <p><em>В каждом вопросе выберите ОДИН вариант ответа.</em></p>
+            </div>
+
+            <!-- Вопросы теста -->
+            <div id="testQuestions"></div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                Завершить тест и отправить результаты
+            </button>
+        </form>
+
+        <div id="loading" class="loading">
+            <h3>⏳ Отправка результатов...</h3>
+            <p>Пожалуйста, подождите, мы обрабатываем ваши ответы</p>
+        </div>
+
+        <div id="successMessage" class="success-message">
+            <h3>✅ Тест 2 завершен!</h3>
+            <p>Результаты отправлены в HR отдел</p>
+            <p>Теперь заполните Тест 3</p>
+            <button onclick="window.location.href='/test3'" style="margin-top: 15px; padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">
+                Перейти к Тесту 3
+            </button>
+        </div>
+
+        <div id="errorMessage" class="error-message">
+            <h3>❌ Ошибка при отправке</h3>
+            <p>Попробуйте еще раз или свяжитесь с нами напрямую</p>
+        </div>
+    </div>
+
+    <script>
+        // Проверка логина и инициализация теста при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginStatus();
+            createTestQuestions(); // Добавляем создание вопросов
+        });
+
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const candidateData = localStorage.getItem('candidateData');
+            
+            if (isLoggedIn && candidateData) {
+                const userData = JSON.parse(candidateData);
+                document.getElementById('userName').textContent = userData.fullName;
+                document.getElementById('userTelegram').textContent = userData.telegram;
+                document.getElementById('userInfo').style.display = 'flex';
+            } else {
+                // Перенаправить на страницу входа
+                window.location.href = '/entry.html';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('candidateData');
+            localStorage.removeItem('testProgress');
+            window.location.href = '/entry.html';
+        }
+
+        function updateTestProgress(stageNumber) {
+            const progress = JSON.parse(localStorage.getItem('testProgress') || '{}');
+            progress[`test${stageNumber}Completed`] = true;
+            localStorage.setItem('testProgress', JSON.stringify(progress));
+        }
+
+        const eqQuestions = [
+            {
+                question: "Клиент раздражён и говорит: «Вы предлагаете ерунду!»",
+                options: [
+                    { text: "доказываю, что он неправ", value: 0 },
+                    { text: "пытаюсь понять причину раздражения и снизить напряжение", value: 2 },
+                    { text: "быстро завершаю разговор", value: 1 }
+                ]
+            },
+            {
+                question: "Коллега перебивает вас на встрече.",
+                options: [
+                    { text: "игнорирую", value: 1 },
+                    { text: "вежливо останавливаю и продолжаю", value: 2 },
+                    { text: "разбираюсь после встречи", value: 1 }
+                ]
+            },
+            {
+                question: "Клиент молчит и не проявляет интереса.",
+                options: [
+                    { text: "продолжаю говорить заготовленное", value: 0 },
+                    { text: "задаю вопросы, чтобы вовлечь", value: 2 },
+                    { text: "жду, пока он сам проявит инициативу", value: 0 }
+                ]
+            },
+            {
+                question: "Покупатель говорит: «Я подумаю».",
+                options: [
+                    { text: "сразу прощаюсь", value: 0 },
+                    { text: "уточняю, что именно вызывает сомнение", value: 2 },
+                    { text: "оставляю брошюру и ухожу", value: 1 }
+                ]
+            },
+            {
+                question: "Клиент сообщает: «У конкурента дешевле».",
+                options: [
+                    { text: "спорю и доказываю", value: 0 },
+                    { text: "выясняю, какие условия важнее", value: 2 },
+                    { text: "соглашаюсь и заканчиваю разговор", value: 0 }
+                ]
+            },
+            {
+                question: "Клиент резко обрывает ваш рассказ.",
+                options: [
+                    { text: "обижаюсь и замолкаю", value: 0 },
+                    { text: "спрашиваю, что для него сейчас важно", value: 2 },
+                    { text: "продолжаю с прежним темпом", value: 0 }
+                ]
+            },
+            {
+                question: "У клиента плохое настроение.",
+                options: [
+                    { text: "стараюсь отвлечь лёгкой беседой", value: 2 },
+                    { text: "игнорирую и иду по плану", value: 0 },
+                    { text: "сокращаю разговор", value: 1 }
+                ]
+            },
+            {
+                question: "К вам обращаются с жалобой.",
+                options: [
+                    { text: "защищаюсь и оправдываюсь", value: 0 },
+                    { text: "выслушиваю и ищу решение", value: 2 },
+                    { text: "предлагаю отложить обсуждение", value: 1 }
+                ]
+            },
+            {
+                question: "Клиент задаёт неожиданный вопрос.",
+                options: [
+                    { text: "признаю, что не знаю, и обещаю уточнить", value: 2 },
+                    { text: "стараюсь перевести тему", value: 0 },
+                    { text: "отвечаю наугад", value: 0 }
+                ]
+            },
+            {
+                question: "На встрече клиент нервничает.",
+                options: [
+                    { text: "ускоряю презентацию", value: 0 },
+                    { text: "задаю вопросы и даю больше пространства", value: 2 },
+                    { text: "делаю вид, что ничего не заметил", value: 0 }
+                ]
+            },
+            {
+                question: "Клиент говорит, что ему «нужна пауза».",
+                options: [
+                    { text: "настаиваю продолжить", value: 0 },
+                    { text: "соглашаюсь, но предлагаю уточнить сроки связи", value: 2 },
+                    { text: "ухожу, не договариваясь", value: 0 }
+                ]
+            },
+            {
+                question: "Покупатель повторяет один и тот же вопрос.",
+                options: [
+                    { text: "раздражаюсь", value: 0 },
+                    { text: "спокойно повторяю и уточняю, что непонятно", value: 2 },
+                    { text: "отвечаю кратко и без деталей", value: 1 }
+                ]
+            },
+            {
+                question: "Клиент переключается на другую тему.",
+                options: [
+                    { text: "мягко возвращаю к ключевому вопросу", value: 2 },
+                    { text: "игнорирую и продолжаю по плану", value: 0 },
+                    { text: "жду, пока он сам вернётся", value: 1 }
+                ]
+            },
+            {
+                question: "К вам пришёл эмоциональный клиент.",
+                options: [
+                    { text: "стараюсь «перекричать» эмоции", value: 0 },
+                    { text: "слушаю и даю высказаться", value: 2 },
+                    { text: "прерываю и иду к сути", value: 0 }
+                ]
+            },
+            {
+                question: "Клиент всё время торопится.",
+                options: [
+                    { text: "подстраиваюсь: даю сжатые тезисы", value: 2 },
+                    { text: "провожу стандартную презентацию", value: 0 },
+                    { text: "говорю, что встреча требует времени", value: 1 }
+                ]
+            },
+            {
+                question: "Семейная пара спорит между собой при вас.",
+                options: [
+                    { text: "вмешиваюсь и стараюсь рассудить", value: 0 },
+                    { text: "сохраняю нейтралитет и поддерживаю обоих", value: 2 },
+                    { text: "делаю вид, что не слышу", value: 0 }
+                ]
+            },
+            {
+                question: "Инвестор сомневается, но не говорит напрямую.",
+                options: [
+                    { text: "продолжаю презентацию", value: 0 },
+                    { text: "задаю уточняющие вопросы", value: 2 },
+                    { text: "жду, пока он сам скажет", value: 1 }
+                ]
+            },
+            {
+                question: "Клиент выражает недовольство ценой.",
+                options: [
+                    { text: "сразу предлагаю скидку", value: 0 },
+                    { text: "обсуждаю ценность и выгоды", value: 2 },
+                    { text: "ухожу на другую тему", value: 0 }
+                ]
+            },
+            {
+                question: "На звонке клиент отвлёкся и молчит.",
+                options: [
+                    { text: "продолжаю монолог", value: 0 },
+                    { text: "спрашиваю, удобно ли сейчас говорить", value: 2 },
+                    { text: "заканчиваю звонок", value: 1 }
+                ]
+            },
+            {
+                question: "Клиент говорит: «Мне не нравится ваш тон».",
+                options: [
+                    { text: "оправдываюсь", value: 0 },
+                    { text: "извиняюсь и переформулирую", value: 2 },
+                    { text: "говорю, что он ошибается", value: 0 }
+                ]
+            }
+        ];
+
+        function createTestQuestions() {
+            const container = document.getElementById('testQuestions');
+            
+            eqQuestions.forEach((question, questionIndex) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                
+                const questionTitle = document.createElement('h4');
+                questionTitle.textContent = `${questionIndex + 1}. ${question.question}`;
+                questionDiv.appendChild(questionTitle);
+                
+                question.options.forEach((option, optionIndex) => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'option';
+                    
+                    const label = document.createElement('label');
+                    
+                    const radio = document.createElement('input');
+                    radio.type = 'radio';
+                    radio.name = `question_${questionIndex}`;
+                    radio.value = option.value;
+                    radio.required = true;
+                    
+                    const text = document.createElement('span');
+                    text.textContent = `${String.fromCharCode(65 + optionIndex)}) ${option.text}`;
+                    
+                    label.appendChild(radio);
+                    label.appendChild(text);
+                    optionDiv.appendChild(label);
+                    questionDiv.appendChild(optionDiv);
+                });
+                
+                container.appendChild(questionDiv);
+            });
+        }
+
+        function calculateEQScore() {
+            let totalScore = 0;
+            
+            eqQuestions.forEach((question, questionIndex) => {
+                const selectedOption = document.querySelector(`input[name="question_${questionIndex}"]:checked`);
+                if (selectedOption) {
+                    totalScore += parseInt(selectedOption.value);
+                }
+            });
+            
+            return totalScore;
+        }
+
+        function analyzeEQScore(score) {
+            if (score >= 30) {
+                return {
+                    level: 'ВЫСОКИЙ',
+                    description: 'Сильный брокер',
+                    recommendation: 'Отличные навыки работы с клиентами'
+                };
+            } else if (score >= 20) {
+                return {
+                    level: 'СРЕДНИЙ',
+                    description: 'Можно развивать',
+                    recommendation: 'Хорошая база, есть потенциал для роста'
+                };
+            } else {
+                return {
+                    level: 'НИЗКИЙ',
+                    description: 'Риск в продажах',
+                    recommendation: 'Требуется развитие эмоционального интеллекта'
+                };
+            }
+        }
+
+        async function submitResults(candidateData) {
+            try {
+                const response = await fetch('/api/submit-eq', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(candidateData)
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    return { success: true, data: result };
+                } else {
+                    return { success: false, error: result.error || 'Ошибка сервера' };
+                }
+            } catch (error) {
+                return { success: false, error: 'Ошибка сети' };
+            }
+        }
+
+        // Инициализация формы
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('eqForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Проверяем заполнение личной информации
+                // Получаем данные из localStorage
+                const candidateData = JSON.parse(localStorage.getItem('candidateData'));
+                if (!candidateData) {
+                    alert('Ошибка: данные пользователя не найдены. Пожалуйста, войдите заново.');
+                    window.location.href = '/entry.html';
+                    return;
+                }
+                
+                // Проверяем, что все вопросы заполнены
+                const totalQuestions = eqQuestions.length;
+                let answeredQuestions = 0;
+                
+                for (let i = 0; i < totalQuestions; i++) {
+                    const selectedOption = document.querySelector(`input[name="question_${i}"]:checked`);
+                    if (selectedOption) answeredQuestions++;
+                }
+                
+                if (answeredQuestions < totalQuestions) {
+                    alert(`Пожалуйста, ответьте на все вопросы. Отвечено: ${answeredQuestions} из ${totalQuestions}`);
+                    return;
+                }
+                
+                // Рассчитываем результат
+                const score = calculateEQScore();
+                const analysis = analyzeEQScore(score);
+                
+                // Показываем загрузку
+                document.getElementById('loading').classList.add('show');
+                document.getElementById('submitBtn').disabled = true;
+                document.getElementById('errorMessage').classList.remove('show');
+                
+                // Подготавливаем данные
+                const testData = {
+                    name: candidateData.fullName,
+                    telegram: candidateData.telegram,
+                    score: score,
+                    analysis: analysis
+                };
+                
+                // Отправляем данные
+                const result = await submitResults(testData);
+                
+                // Скрываем загрузку
+                document.getElementById('loading').classList.remove('show');
+                
+                if (result.success) {
+                    // Обновляем прогресс для test3 (EQ)
+                    const progress = JSON.parse(localStorage.getItem('testProgress') || '{}');
+                    progress.test3Completed = true;
+                    localStorage.setItem('testProgress', JSON.stringify(progress));
+                    
+                    // Показываем успешное сообщение
+                    document.getElementById('successMessage').classList.add('show');
+                    
+                    // Скроллим к сообщению
+                    document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+                    
+                    // Перенаправляем на страницу этапов через 3 секунды
+                    setTimeout(() => {
+                        window.location.href = '/entry.html';
+                    }, 3000);
+                } else {
+                    // Показываем ошибку
+                    document.getElementById('errorMessage').classList.add('show');
+                    document.getElementById('errorMessage').scrollIntoView({ behavior: 'smooth' });
+                    document.getElementById('submitBtn').disabled = false;
+                }
+            });
+        });
+    </script>
+    
+    <!-- Отметка времени обновления -->
+    <div id="update-timestamp" class="update-timestamp"></div>
+    
+    <script>
+        // Проверка авторизации при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const candidateData = localStorage.getItem('candidateData');
+            
+            console.log('Test page loaded, checking auth:');
+            console.log('isLoggedIn:', isLoggedIn);
+            console.log('candidateData:', candidateData);
+            
+            // Если пользователь не авторизован, перенаправляем на главную
+            if (isLoggedIn !== 'true' || !candidateData || candidateData.trim() === '') {
+                console.log('User not logged in, redirecting to main page');
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = '/';
+                return;
+            }
+            
+            try {
+                const userData = JSON.parse(candidateData);
+                if (!userData.fullName || !userData.telegram || !userData.role) {
+                    console.log('Incomplete user data, redirecting to main page');
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    window.location.href = '/';
+                    return;
+                }
+                console.log('User is authorized:', userData.fullName);
+            } catch (error) {
+                console.error('Error parsing user data:', error);
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = '/';
+                return;
+            }
+            
+            // Устанавливаем отметку времени
+            const timestampElement = document.getElementById('update-timestamp');
+            if (timestampElement) {
+                // Статичная дата последнего обновления на сервере
+                timestampElement.textContent = `Обновлено: 26.09.2025, 03:15:00`;
+            }
+        });
+    </script>
+</body>
+</html>
