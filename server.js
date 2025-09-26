@@ -1233,6 +1233,24 @@ app.get('/api/admin/stats', async (req, res) => {
     }
 });
 
+// API endpoint для аналитики
+app.post('/api/analytics', (req, res) => {
+    try {
+        const analyticsData = req.body;
+        console.log('Analytics data received:', {
+            sessionId: analyticsData.sessionId,
+            eventsCount: analyticsData.events?.length || 0,
+            sessionDuration: analyticsData.sessionDuration
+        });
+        
+        // Здесь можно сохранить данные в базу или отправить в внешнюю аналитику
+        res.json({ success: true, message: 'Analytics data received' });
+    } catch (error) {
+        console.error('Error processing analytics:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 // Обработка ошибок сервера (обновлено для Express 5.x)
 process.on('uncaughtException', (error) => {
     console.error('Uncaught Exception:', error);
