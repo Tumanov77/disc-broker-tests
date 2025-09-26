@@ -63,13 +63,25 @@ app.use(express.static('public', {
     etag: true,
     lastModified: true,
     setHeaders: (res, path) => {
-        // Кэширование для разных типов файлов
+        // Правильный content-type для HTML файлов
         if (path.endsWith('.html')) {
+            res.setHeader('Content-Type', 'text/html; charset=utf-8');
             res.setHeader('Cache-Control', 'public, max-age=300'); // 5 минут для HTML
-        } else if (path.endsWith('.css') || path.endsWith('.js')) {
-            res.setHeader('Cache-Control', 'public, max-age=86400'); // 1 день для CSS/JS
-        } else if (path.endsWith('.png') || path.endsWith('.jpg') || path.endsWith('.ico')) {
-            res.setHeader('Cache-Control', 'public, max-age=604800'); // 1 неделя для изображений
+        } else if (path.endsWith('.css')) {
+            res.setHeader('Content-Type', 'text/css; charset=utf-8');
+            res.setHeader('Cache-Control', 'public, max-age=86400'); // 1 день для CSS
+        } else if (path.endsWith('.js')) {
+            res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+            res.setHeader('Cache-Control', 'public, max-age=86400'); // 1 день для JS
+        } else if (path.endsWith('.png')) {
+            res.setHeader('Content-Type', 'image/png');
+            res.setHeader('Cache-Control', 'public, max-age=604800'); // 1 неделя для PNG
+        } else if (path.endsWith('.jpg') || path.endsWith('.jpeg')) {
+            res.setHeader('Content-Type', 'image/jpeg');
+            res.setHeader('Cache-Control', 'public, max-age=604800'); // 1 неделя для JPG
+        } else if (path.endsWith('.ico')) {
+            res.setHeader('Content-Type', 'image/x-icon');
+            res.setHeader('Cache-Control', 'public, max-age=604800'); // 1 неделя для ICO
         }
     }
 }));
