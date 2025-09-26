@@ -147,9 +147,9 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="user-info" id="userInfo" style="display: none;">
+            <div class="user-info" id="userInfo" style="display: flex;">
                 <div class="user-data">
-                    <span id="userName"></span> (<span id="userTelegram"></span>)
+                    <span id="userName">Тестовый пользователь</span> (<span id="userTelegram">@testuser</span>)
                 </div>
                 <div class="user-buttons">
                     <button class="logout-btn" onclick="clearAllData()" style="margin-right: 10px; background: rgba(220,53,69,0.8);">Очистить данные</button>
@@ -197,7 +197,7 @@
             const timestampElement = document.getElementById('update-timestamp');
             if (timestampElement) {
                 // Статичная дата последнего обновления на сервере
-                timestampElement.textContent = `Последнее обновление: 26.09.2025, 14:06:42`;
+                timestampElement.textContent = `Последнее обновление: 26.09.2025, 14:09:23`;
             }
 
             // Проверяем данные пользователя
@@ -239,14 +239,25 @@
             const userTelegramElement = document.getElementById('userTelegram');
             const userInfoElement = document.getElementById('userInfo');
             
+            console.log('Elements found:', {
+                userName: !!userNameElement,
+                userTelegram: !!userTelegramElement,
+                userInfo: !!userInfoElement
+            });
+            
             if (userNameElement && userTelegramElement && userInfoElement) {
                 userNameElement.textContent = displayName;
                 userTelegramElement.textContent = userData.telegram;
                 userInfoElement.style.display = 'flex';
                 
                 console.log('User info displayed:', displayName, userData.telegram);
+                console.log('User info element style:', userInfoElement.style.display);
             } else {
-                console.error('User info elements not found');
+                console.error('User info elements not found:', {
+                    userName: userNameElement,
+                    userTelegram: userTelegramElement,
+                    userInfo: userInfoElement
+                });
             }
         }
 
